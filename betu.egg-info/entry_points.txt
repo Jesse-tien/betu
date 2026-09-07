@@ -1,0 +1,2 @@
+[gui_scripts]
+betu = betu.main:makefig

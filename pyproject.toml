@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=61", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "betu"
+version = "1.0.0"
+description = '彼图（BeTu）科研仿真与Excel数据绘图工具，支持图形界面、符号公式计算、数值仿真、论文标准绘图风格和Python扩展。BeTu——Be better tool for U! BeTu scientific simulation and Excel data plotting tool, supporting graphical user interface, symbolic formula calculation, numerical simulation, paper-standard plotting styles, and Python extension.'
+readme = "README.md"
+requires-python = ">=3.8"
+authors = [{name = "Yu-Xin Tian", email = "tianyuxin@mail.neu.edu.cn"}]
+license = {text = "MIT"}
+dependencies = ["numpy", "sympy>=1.12", "matplotlib>=3.6", "PyQt5>=5.15,<5.16", "openpyxl>=3.1", "xlrd>=2.0.1", "antlr4-python3-runtime==4.11.1"]
+
+[project.gui-scripts]
+betu = "betu.main:makefig"
+
+[tool.setuptools.packages.find]
+include = ["betu*"]
+
+[tool.setuptools.package-data]
+betu = ["assets/*.png", "assets/*.ico", "assets/help/*.png"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

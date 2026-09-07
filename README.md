@@ -1,0 +1,495 @@
+# 简单易用的科研仿真与 Excel 数据绘图工具——彼图 BeTu 使用说明【1.0.0】
+
+**彼图（BeTu）是一款科研仿真与 Excel 数据绘图工具，集符号计算、数值仿真和数据绘图于一体。你可以通过图形界面完成操作，也可以使用 Python 编写和扩展绘图程序，并按论文排版需要调整图形样式。**
+
+**BeTu——Be better tool for U!**
+
+作者：**田雨鑫｜东北大学｜博士**。联系邮箱：[tianyuxin@mail.neu.edu.cn](mailto:tianyuxin@mail.neu.edu.cn)。
+
+BeTu is a scientific simulation and Excel data plotting tool that combines symbolic computation, numerical simulation, and data visualization. Use its graphical interface or extend your workflow with Python, and customize plots for research papers.
+
+[TOC]
+
+## 一、它能做什么？
+
+彼图提供两种使用方式：如果不熟悉 Python，可以在界面中输入公式或导入 Excel 数据，按提示完成绘图；如果熟悉 Python，可以直接调用绘图函数，或在界面生成的完整代码基础上继续修改。
+
+五个标签页对应以下任务：
+
+| 标签页 | 用途 | Python 函数 |
+| --- | --- | --- |
+| 公式到曲线 | 改变一个参数，比较多个表达式的变化趋势 | `draw_lines` |
+| 模式比较 | 改变两个参数，找出每个参数组合下取值最大的表达式 | `draw_max_area` |
+| 关系区域比较 | 改变两个参数，展示各表达式取值的大小顺序 | `draw_detail_area` |
+| 公式到三维图 | 把表达式绘制为三维曲面 | `draw_3D` |
+| 数据到绘图 | 导入 Excel、CSV，或直接粘贴数据绘图 | `plot_table` |
+
+![彼图主界面](docs/screenshots/01-main.png)
+
+**单参数曲线**：观察参数变化时，不同模式的利润、成本或其他指标怎样变化。
+
+![单参数数值分析](docs/screenshots/paper-draw_lines-plot.png)
+
+**模式比较和关系区域比较**：前者显示哪个模式的指标值最大，后者显示各模式指标值的完整大小顺序。以利润为指标时，可以据此比较各模式的盈利表现。
+
+![最优模式区域](docs/screenshots/paper-draw_max_area-plot.png)
+
+![详细关系区域，图例在图外右侧](docs/screenshots/paper-draw_detail_area-plot.png)
+
+**三维曲面**：同时观察两个参数对结果的影响。
+
+![双参数三维分析](docs/screenshots/paper-draw_3D-plot.png)
+
+**表格数据绘图**：支持折线图、条形图、水平条形图、箱型图、饼状图、直方图和散点图。
+
+![数据绘图界面](docs/screenshots/10-data.png)
+
+## 二、如何安装和启动？
+
+### 2.1 安装 Python【已安装 Python 3.8 或更高版本可跳过】
+
+从 [Python 官网](https://www.python.org/downloads/) 下载并安装 Python。Windows 安装时勾选 **Add Python to PATH**。建议使用 Python 3.10 或 3.11；本版本在 Windows、Python 3.11 上进行了测试。
+
+打开终端，输入以下命令检查版本：
+
+```shell
+python --version
+```
+
+macOS 上通常使用 `python3` 命令。彼图采用跨平台的 Qt5 界面，但尚未在真实 Mac 设备上完成测试。不同系统中的字体显示效果取决于已安装的字体。
+
+### 2.2 安装 betu
+
+如果已获取安装包，请在安装包所在文件夹打开终端。在 Windows 中，可以打开该文件夹，在资源管理器的地址栏输入 `cmd` 并按回车，再执行以下命令：
+
+```shell
+pip3 install betu-1.0.0-py3-none-any.whl
+```
+
+发布到 PyPI 后，也可按包名安装：
+
+```shell
+pip3 install betu
+```
+
+安装时会自动安装 NumPy、SymPy、Matplotlib、PyQt5，以及读取 Excel 和解析 LaTeX 所需的依赖。使用彼图界面无需安装 Jupyter、IPython 或 notebook。
+
+### 2.3 启动 betu
+
+安装完成后，运行 `betu` 即可打开界面。在 Windows 中，也可以按 **Win+R** 打开“运行”，输入 `betu` 后按回车。该命令使用图形界面启动入口，不会额外弹出黑色命令窗口。
+
+也可以从终端启动：
+
+```shell
+python -m betu
+```
+
+在 Python 中启动：
+
+```python
+from betu import *
+makefig()
+```
+
+在 Windows 11 中，也可以打开开始菜单，搜索 `betu`；如果搜索结果中显示该程序，点击即可启动。还可以在 Python 安装目录下的 `Scripts` 文件夹中找到 `betu.exe`，例如 `C:\Python311\Scripts\betu.exe`。右键点击该文件，选择“发送到 → 桌面快捷方式”，之后即可通过桌面快捷方式启动；若右键菜单未显示“发送到”，可先点击“显示更多选项”。具体路径取决于 Python 的安装位置。
+
+启动后，主界面会显示下图中的五个标签页。右上角可切换中文和英文界面；点击“关于...”可查看版本、作者和联系邮箱。
+
+![启动后的主界面](docs/screenshots/01-main.png)
+
+## 三、如何使用界面？【无需具备 Python 编程基础】
+
+公式绘图的基本顺序是：**输入表达式 → 公式识别 → 选择分析参数 → 设置分析范围和其余参数的固定值 → 调整绘图风格 → 出图**。导入表格数据绘图的方法见第 3.6 节。
+
+每个标签页都提供“加载案例”。第一次使用时，建议先加载案例，再点击“出图...”查看结果，随后尝试修改参数或样式。本章还以 NW、BW、NS、BS 四种模式的利润比较为例，介绍不同分析方法。完整公式和参数见 [论文示例代码](docs/examples/paper-draw_lines.py)，可通过“打开代码...”加载。
+
+### 3.1 输入表达式与使用符号工具
+
+**第一步：逐行输入表达式。** 每行包含一个名称和一个计算式，中间用 `=` 连接。名称用于标识曲线或模式，并显示在相应的图例或区域标签中：
+
+```python
+$p_a$ = 2*a*x + b*x**2
+$p_b$ = a*x + 2*b*x**2
+```
+
+名称可使用 `$` 包裹的 LaTeX，例如 `$\pi_M^{NN}$`。右侧计算式使用 Python 语法：乘法写成 `*`，乘方写成 `**`。例如，`2a` 应写成 `2*a`，`x` 的平方应写成 `x**2`。由于 `lambda` 是 Python 关键字，计算式中的变量 $\lambda$ 请写成 `lamda`。
+
+**第二步（可选）：用 `:=` 定义中间变量。** 需要重复使用某个计算结果时，可以先为它命名，再在绘图表达式中引用。中间变量的定义可放在绘图表达式之前或之后：
+
+```python
+p_n := 2*a + b - c**3/2
+$\pi_R$ = integrate(p_n*t+b-3*t**2, (t, p_n-c, p_n+a*b))
+```
+
+示例中的 `p_n` 是中间变量，不会单独绘制成曲线，也不会列入生成代码的 `symbols` 符号定义。定积分中的积分变量 `t` 会列入符号定义；如果它只在积分内使用，积分后已被消去，就不会出现在横轴、纵轴的分析参数列表中，也无需赋固定值。`integrate`、`sin`、`sqrt` 等函数名称不会被识别为待赋值参数。
+
+中间变量名只能包含大小写字母、下划线和数字，且不能以数字开头。中间变量支持重复赋值，也支持对数组、列表或元组等对象进行索引。索引前需要确认结果可以按位置取值：例如，普通的 `integrate(...)` 通常返回一个表达式，不能直接在后面添加 `[0]`。
+
+![表达式识别和参数设置](docs/screenshots/02-formula.png)
+
+**第三步：用“Ω...”插入符号。** 符号面板中的按钮以 `α`、`∫`、`∑` 等符号显示，点击即可在编辑器中插入对应的 Python 写法。面板会保持在主窗口上方，打开时仍可继续编辑表达式。插入符号名称时，程序会自动补充必要的空格，避免与相邻变量名连在一起。
+
+<img src="docs/screenshots/03-symbols.png" alt="小型符号面板" style="zoom: 50%;" />
+
+**第四步：转换已有公式。** 点击“LaTex转换...”，选择公式来源，粘贴需要计算的表达式，点击“转换”后复制结果。来源列表依次为 **Mathematica、MATLAB、通用 LaTeX**，每项都有对应的操作提示。
+
+在 Mathematica 中，选中公式后右键选择“复制为 → LaTeX”，再将内容粘贴到转换窗口。在 MATLAB 中，复制赋值语句右侧的表达式即可。来自其他来源的 LaTeX（例如由 AI 工具识别得到的公式）可使用“通用 LaTeX”转换。转换结果以 `**` 表示乘方，并将变量 `lambda` 写成 `lamda`，以符合 Python 和 SymPy 的语法要求。由于不同来源的 LaTeX 可能存在不规范写法或歧义，转换无法保证完全准确；使用前请核对变量、上下标、乘方和积分上下限。
+
+![LaTeX 转换窗口](docs/screenshots/04-latex.png)
+
+表达式、运行信息、LaTeX 转换和高级设置中的代码编辑区均提供“自动换行”选项，并支持行号、语法高亮和 **Ctrl+鼠标滚轮** 缩放。参数赋值框始终自动换行，不显示行号，也无需单独开启换行。自动换行只影响显示，不改变代码内容。出现语法错误时，程序会提示并标记出错行；计算过程中出现的错误会通过状态栏或错误对话框提示。
+
+### 3.2 单参数数值分析
+
+1. 切换到“公式到曲线”，点击“加载案例”，或输入自己的表达式后点击“公式识别”。
+2. 在“横轴分析参数”中选择要研究的变量，分别填写范围的“开始”值和“结束”值。程序会根据范围自动计算步长，你也可以手动调整。
+3. 在“参数赋值”中填写其余参数的固定值，例如 `a=2, y=0.5`，各项用逗号或换行分隔。正在分析的变量无需赋固定值。
+
+   切换分析参数时，程序会自动更新赋值框，并临时记住每个参数上次使用的固定值。例如，原来设置了 `y=0.5`，改为分析 `y` 时，该项会从赋值框中隐藏；改为分析其他参数后，`y=0.5` 会自动恢复。各标签页分别保留自己的赋值记录。没有历史赋值的参数会先填入 `1.0`，请按模型需要修改。双参数图会同时从赋值框中排除横轴和纵轴的分析参数。
+
+![单参数范围和赋值](docs/screenshots/02-formula.png)
+
+4. 点击“绘图风格设置...”，在“公共设置”中填写标题、坐标轴名称，并调整整体字号、图片宽高和文字旋转角度。**标题留空时不显示标题**；填写标题后，程序会适当增加图片高度，为标题预留空间。
+
+![公共绘图设置](docs/screenshots/05-style-common.png)
+
+5. 在“曲线／区域样式”中选择要修改的曲线，再设置线宽、线型、颜色、标记形状和标记大小。选择列表根据实际绘图表达式生成，不包含中间变量；切换曲线时，已做的修改会保留。颜色、线型和标记列表分别提供色块、线条预览和形状图标，便于选择。需要其他颜色时，可点击“选择颜色...”。
+
+![逐条设置曲线样式](docs/screenshots/05-style-series.png)
+
+![带色块的颜色列表](docs/screenshots/05-colors.png)
+
+6. 切换到同一窗口的“图例设置”页，调整图例位置、列数、字号和间距。图例默认为 1 列；主界面上的“显示图例”复选框用于控制图例是否显示。
+
+![图例设置](docs/screenshots/05-style-legend.png)
+
+7. 点击“确定”，再点击“出图...”。预览窗口带 Matplotlib 工具栏，可以缩放、平移和保存图片；关闭预览后回到主界面。
+
+![带缩放、平移和保存工具的绘图预览窗口](docs/screenshots/12-preview.png)
+
+程序会根据数据范围自动调整坐标刻度间隔，并在适当时使用科学计数法。绘图中的中文优先使用宋体，英文优先使用 Times New Roman，中英混排时也按此规则选择字体。如果系统未安装相应字体，程序会使用其他可用字体。
+
+**编辑代码：** “运行信息”区域中的代码默认锁定。勾选“编辑代码”后可以直接修改，此时出图、复制和保存都会使用编辑区中的代码。取消勾选后，程序会根据代码更新界面控件；如果无法从代码中恢复设置，会保留编辑状态并提示检查。
+
+**保存和打开代码：** 按 **Ctrl+S** 或点击保存按钮即可保存。首次保存时，会弹出对话框供你选择 `.py` 文件的位置和名称；已打开或保存过的代码会直接更新原文件。按钮会相应显示“保存代码(S)...”或“更新代码(S)”。加载案例后，再次保存时会按新文件处理。“打开代码...”可恢复对应标签页中的表达式、中间变量、参数、样式、标题、图例和高级代码；“复制程序代码”可将完整脚本复制到剪贴板。
+
+**保存图片：** 使用预览窗口工具栏中的保存按钮，或在“绘图风格设置 → 坐标与其他设置”中指定图片保存位置。代码文件用于继续编辑和重复绘图，图片文件用于展示或论文排版。
+
+### 3.3 双参数分析——模式比较
+
+模式比较、关系区域比较和三维图的默认采样精度均为 **1000**，即横、纵两个方向各取 1000 个采样点。可在“绘图风格设置 → 坐标与其他设置”中调整。采样精度决定计算时的网格密度，保存图片的 DPI 决定输出分辨率，两者含义不同。
+
+切换到“模式比较”，输入需要比较的表达式，为横轴和纵轴选择两个不同的分析参数，并分别填写分析范围的开始值和结束值。其余参数的固定值填写在“参数赋值”中。
+
+![模式比较的参数设置](docs/screenshots/07-mode.png)
+
+点击“出图...”后，每个区域都会标明在该区域内取值最大的模式。该图默认不显示图例，可勾选“显示图例”开启；坐标背景不显示网格。
+
+在“绘图风格设置...”中，可按“区域 1、区域 2……”分别调整样式，其顺序与绘图表达式的顺序一致。**同一模式分布在多个互不相连的区域时，符合面积阈值的各个分块都会分别标注，图例中则只保留一项。** 如果保留的区域内放不下文字，程序会将标签移到图外，并用箭头指向对应区域。
+
+**过滤细碎区域：** 在“绘图风格设置 → 坐标与其他设置”中，使用“忽略小区域（面积比例）”设置最小保留面积。它对应代码参数 `dropout`，适用于模式比较和关系区域比较。
+
+| `dropout` | 含义 |
+| --- | --- |
+| `0.001`（默认） | 忽略面积小于整个绘图区 0.1% 的独立分块 |
+| `0.01` | 忽略面积小于整个绘图区 1% 的独立分块 |
+| `0` | 不过滤小区域 |
+
+面积比例根据采样网格估算，每个独立分块分别判断，属于同一模式的分块不会合并计算面积。低于阈值的分块不显示填色、边界、标签或引导线，其余分块正常保留。`dropout` 越大，被隐藏的区域越多。保存的代码会保留该设置，例如 `dropout = 0.001`。
+
+![模式比较结果](docs/screenshots/paper-draw_max_area-plot.png)
+
+![同一模式的分块分别标注](docs/screenshots/disconnected-modes-plot.png)
+
+分块示例可直接打开 [disconnected-modes.py](docs/examples/disconnected-modes.py)，或用 `make_example('disconnected_modes')` 生成完整代码。
+
+四模式利润比较案例见 [paper-draw_max_area.py](docs/examples/paper-draw_max_area.py)，可通过“打开代码...”加载。横轴为 `alpha`，范围为 `0.7～0.8`；纵轴为 `b`，范围为 `0～0.08`。
+
+### 3.4 双参数分析——关系区域比较
+
+“关系区域比较”显示每个区域内各表达式取值的完整大小顺序。例如，某个区域可能满足 `A > B > C`，另一个区域则满足 `B > A > C`。表达式输入和参数赋值的方法与“模式比较”相同。
+
+点击“加载案例”，程序会填入 NW、BW、NS、BS 四种模式的利润表达式及参数。横轴为 `alpha`，范围为 `0.7～0.8`；纵轴为 `b`，范围为 `0～0.08`。其余参数固定为 `E=2.0, c_n=0.2, c_r=0.1, delta=0.8, e_n=1.0, e_r=0.6, k=1.1, p_e=0.1`。完整代码可用 `make_example('draw_detail_area')` 生成，也可通过“打开代码...”加载 [draw_detail_area.py](docs/examples/draw_detail_area.py)。
+
+![关系区域比较界面](docs/screenshots/08-detail.png)
+
+![四种模式的利润关系区域](docs/screenshots/draw_detail_area-plot.png)
+
+图例默认位于图外右侧，避免遮挡区域内容。首次出图后，样式列表会根据实际生成的区域显示“区域 1、区域 2……”。修改公式、参数或范围后重新出图，列表也会更新。你可以逐个调整区域颜色、填充纹理、标签背景及标签位置偏移。
+
+程序先按 `dropout` 过滤细碎分块（详见第 3.3 节），再为保留的区域安排标签位置。默认开启的“小区域标记自动避让与引导线”会先尝试将文字放在所属区域内；如果空间不足，就将标签排列在图外上方，用箭头指向对应区域。通过位置偏移手动将标签移出所属区域时，程序也会添加箭头，标明标签与区域的对应关系。
+
+论文案例中的 Region II 和 Region III 已移到图内中上部，并通过短箭头指向相应的小区域。你可以在“坐标与其他设置”中调整 `dropout` 或关闭自动避让，也可以在区域样式中修改标签的位置偏移。
+
+如果希望了解引导线的效果，可以使用比较 `A=x`、`B=y`、`C=0.88` 的示例。该示例形成的窄区域便于观察标签移到图外后的标注方式。
+
+![小区域引导线示例](docs/screenshots/smart-regions-plot.png)
+
+可直接打开 [小区域完整案例](docs/examples/smart-regions.py)，或用 `make_example('smart_regions')` 生成完整代码。
+
+![详细区域比较结果](docs/screenshots/paper-draw_detail_area-plot.png)
+
+上图的完整代码见 [paper-draw_detail_area.py](docs/examples/paper-draw_detail_area.py)。关系区域图不显示坐标网格；区域标签的文字会根据背景深浅自动使用黑色或白色，以便阅读。
+
+### 3.5 双参数分析——三维曲面
+
+切换到“公式到三维图”，点击“加载案例”，即可载入第 3.4 节使用的四模式利润表达式和固定参数。横轴为 `alpha`，范围为 `0.7～0.8`；纵轴为 `b`，范围为 `0～0.08`；z 轴表示利润。点击“出图...”后，可以通过四个曲面观察两项参数对各模式利润的影响。
+
+![三维图参数设置](docs/screenshots/09-surface.png)
+
+三维图提供默认的曲面配色和线条样式。需要调整时，可在“绘图风格设置...”中修改各曲面的颜色和线型，并在“坐标与其他设置”中调整不透明度、曲面网格线颜色、仰角和方位角。曲面网格线用于表现曲面的形状，与坐标背景网格不同；三维图标签页不提供坐标背景网格开关。
+
+当相邻的 z 轴刻度因显示的小数位不足而无法区分时，程序会自动增加小数位数。导出图片时，会为三个坐标轴的名称预留边距，避免文字被裁切。
+
+![三维图结果](docs/screenshots/paper-draw_3D-plot.png)
+
+完整示例见 [draw_3D.py](docs/examples/draw_3D.py) 和 [paper-draw_3D.py](docs/examples/paper-draw_3D.py)，也可用 `make_example('draw_3D')` 生成。三维视角参数的含义见附录 F。
+
+### 3.6 Excel 数据直接绘图
+
+**第一步：导入或粘贴数据。** 打开“数据到绘图”，点击“导入Excel/CSV...”并选择文件。如果工作簿中有多个工作表，程序会提示你选择其中一个。也可以先在 Excel 中复制数据，再点击“粘贴数据”。两种方式都会打开导入预览，并自动判断首行是否为列名；你可以根据实际内容修改判断结果。
+
+如果复制的首行是“学号、每周自习时长、数学成绩”等表头，请勾选“首行是列名”。如果首行已经包含 `S001`、`16.8`、`76.5` 这样的数据，请取消勾选；程序会保留这一行，并自动生成“列1、列2、列3”等列名。核对预览和数据行数后，点击“导入数据”；点击“取消”则保留当前表格。纯文字数据、数字列名等情况可能难以自动区分，请以预览中的实际内容为准。
+
+如果需要将数据粘贴到表格的指定位置，先选中起始单元格，再按 **Ctrl+V**。这种方式会粘贴复制内容中的全部行，不将首行提取为列名。
+
+**第二步：选择图形类型、横轴列和数值系列。** “数值系列”是需要绘制的数值列，多数图形支持同时选择多个系列。已选作横轴的列不能再选为数值系列。不同图形的选择方法见下表，其中直方图无需指定横轴列，饼状图只使用一个数值系列。
+
+表格中的数据可以直接编辑，双击列标题可修改列名，按住 **Ctrl** 并滚动鼠标滚轮可缩放表格。表格始终显示网格，便于对齐查看数据。
+
+需要删除数据时，选中单元格后点击“删除行”或“删除列”，即可删除这些单元格所在的整行或整列；也可以通过行号或列标题选择多行、多列。删除前会弹出确认对话框，显示待删除的数量，并默认选中“取消”。
+
+![数据表、图形类型和系列选择](docs/screenshots/10-data.png)
+
+**第三步：通过案例了解数据格式。** 选择图形类型后点击“加载案例”，程序会填入示例数据，并选好对应的横轴列和数值系列。点击“类型教程”可查看该图形的用途和数据组织方法。下表中的完整程序均可通过“打开代码...”加载，也可以下载 [包含七个工作表的 Excel 示例](docs/examples/table-examples.xlsx)，对照整理自己的数据。
+
+| 类型 | 横轴与系列怎么选 | 可直接打开的完整程序 | 示例数据 |
+| --- | --- | --- | --- |
+| 折线图 | 横轴选年份／时间，每个数值系列画一条线 | [data_line.py](docs/examples/data_line.py) | [line.csv](docs/examples/line.csv) |
+| 条形图 | 横轴选分类，数值列可多选 | [data_bar.py](docs/examples/data_bar.py) | [bar.csv](docs/examples/bar.csv) |
+| 水平条形图 | 在横轴列选项中选择分类列，数值列可多选；图中分类显示在纵轴上 | [data_barh.py](docs/examples/data_barh.py) | [barh.csv](docs/examples/barh.csv) |
+| 箱型图 | 输入原始观测值；分类列相同的行归为一组 | [data_box.py](docs/examples/data_box.py) | [box.csv](docs/examples/box.csv) |
+| 饼状图 | 横轴选扇区名称，只选一个非负数值系列，且数值总和须大于零 | [data_pie.py](docs/examples/data_pie.py) | [pie.csv](docs/examples/pie.csv) |
+| 直方图 | 选择原始数值列，设置分箱数；无需选择横轴列 | [data_hist.py](docs/examples/data_hist.py) | [hist.csv](docs/examples/hist.csv) |
+| 散点图 | 横轴和系列都选择数值列 | [data_scatter.py](docs/examples/data_scatter.py) | [scatter.csv](docs/examples/scatter.csv) |
+
+**饼状图示例。** `Category` 列包含 Materials、Labor 等类别，`Amount` 列包含对应数值。在横轴列选项中选择 `Category`，数值系列只选择 `Amount`。每行数据对应一个扇区，扇区内的百分比文字会根据背景深浅自动使用黑色或白色。
+
+![饼状图示例](docs/screenshots/data_pie-plot.png)
+
+**箱型图示例。** 每行填写一次原始观测值，无需预先求平均。`Group` 列中的 Control、Treatment 用于分组，`A`、`B` 是两个数值系列。箱体表示第 25 百分位数到第 75 百分位数之间的范围，中线表示中位数，离群点单独显示。
+
+![箱型图示例](docs/screenshots/data_box-plot.png)
+
+**直方图示例。** 将 `Score` 列选为数值系列，程序会把分数划分为若干区间，统计各区间内的数据数量。示例默认分为 6 个区间，即“分箱数”为 6。调整分箱数可以观察不同区间划分下的数据分布。
+
+![直方图示例](docs/screenshots/data_hist-plot.png)
+
+其他常见图形：
+
+![折线图](docs/screenshots/data_line-plot.png)
+
+![条形图](docs/screenshots/data_bar-plot.png)
+
+![水平条形图](docs/screenshots/data_barh-plot.png)
+
+![散点图](docs/screenshots/data_scatter-plot.png)
+
+**第四步：调整样式并出图。** 点击“绘图风格设置...”，调整标题、字号、颜色、坐标轴名称、文字旋转角度和图例，再点击“出图...”。饼状图的样式选择列表按扇区名称生成，其他图形则按已选的数值系列生成。
+
+### 3.7 高级设置与中英文界面
+
+如果常规设置不能满足需要，可以点击“高级设置...”，从“常用操作”中选择所需功能，再点击“插入模板”。模板包括添加标题、文字标注、箭头、水平或竖直参考线，设置坐标范围、刻度间隔、对数坐标、图外图例、坐标轴名称和背景颜色，以及保存 SVG、PNG、PDF 图片。
+
+![带行号和高亮的高级代码编辑器](docs/screenshots/06-advanced.png)
+
+补充代码通过 `the_plt` 操作当前图形，并在绘图完成后执行。编辑器支持行号、语法高亮、自动换行和 **Ctrl+鼠标滚轮** 缩放。修改模板中的内容后，可点击“语法检查”检查写法，再点击“确定”保存；点击“取消”则放弃本次修改。无需补充操作时，保持空白即可。
+
+```python
+the_plt.title("利润比较 Profit comparison", fontsize=14)
+the_plt.savefig(
+    "filename.svg",
+    format="svg",
+    bbox_inches="tight",
+    dpi=300,
+    transparent=False,
+)
+```
+
+在高级设置中，如果保存路径只写文件名或相对路径，图片会保存到用户的 Documents 文件夹下；如果填写绝对路径，则保存到指定位置。语法检查只检查代码的语法，不执行代码；只有点击“出图...”后，补充代码才会运行，运行错误也会在此时提示。
+
+通过主界面右上角的下拉列表切换语言后，按钮、帮助正文、状态提示和设置窗口会使用所选语言。符号面板中的数学符号保持不变。
+
+![英文界面](docs/screenshots/11-english.png)
+
+点击“使用帮助”可阅读包含数学公式、代码块、设置表格和操作截图的说明。帮助页面采用 HTML 排版，截图随程序一同安装在 `betu/assets/help` 中，无需联网即可查看。
+
+![带数学公式和代码块的使用帮助](docs/screenshots/13-help.png)
+
+## 四、BeTu 高阶用法【在 Python 中调用绘图函数】
+
+导入包时会打印快速上手提示，列出常用函数及完整案例的生成方法：
+
+```python
+from betu import *
+make_example('draw_lines')
+```
+
+`make_example` 接受一个示例名称，并打印带注释的完整代码。示例会分别列出符号定义、中间变量、绘图表达式、参数赋值和各项样式设置，与界面“运行信息”中的代码格式一致。复制这些代码后，即可运行或继续修改。
+
+在 Jupyter 单元格开头可加入：
+
+```python
+%config InlineBackend.figure_format = 'retina' # 在 Jupyter 中显示高清图片
+```
+
+这条魔法命令仅用于 Jupyter，不要写进普通 `.py` 文件。也可保存 SVG 或 PDF 矢量图用于论文排版。
+
+如果已安装 Jupyter，可以打开 [BeTu-Jupyter.ipynb](docs/examples/BeTu-Jupyter.ipynb)，按顺序运行单元格。该笔记本使用第 3.4 节中的四模式利润表达式、固定参数，以及 `alpha` 和 `b` 的分析范围，并保留了运行结果供参考。Jupyter 是可选的运行环境，使用彼图界面不需要安装它。
+
+导入时的快速上手提示与高清显示设置：
+
+![Jupyter 中导入彼图并设置高清显示](docs/screenshots/14-jupyter-setup.png)
+
+绘图代码和单元格中的实际输出：
+
+![Jupyter 中运行论文案例的关系区域图](docs/screenshots/15-jupyter-plot.png)
+
+### 4.1 根据数据绘制曲线【data_lines 函数】
+
+`data` 以字典形式提供数据：键是曲线名称，值是该曲线的数值列表。各列表的长度应相同，横轴标签列表 `label_x` 的长度也应与之保持一致。
+
+```python
+from betu import *
+data = {'A': [10, 13, 16], 'B': [12, 14, 15]}
+label_x = ['2024', '2025', '2026']
+the_plt = data_lines(data=data, label_x=label_x, x_name='Year', y_name='Value')
+the_plt.show()
+```
+
+使用 `make_example('data_lines')` 可生成包含各项样式参数的完整示例，也可直接运行 [data_lines.py](docs/examples/data_lines.py)。
+
+![根据数据绘制曲线](docs/screenshots/data_lines-plot.png)
+
+### 4.2 通过数值仿真绘制表达式曲线【draw_lines 函数】
+
+`draw_lines` 在给定范围内改变一个参数的取值，并计算各表达式的结果。界面中用 `:=` 定义的中间变量，保存为 Python 代码后会转换成标准的 `=` 赋值语句。下面的 `p_n` 是由已有符号计算得到的中间变量，无需再列入符号定义：
+
+```python
+from betu import *
+# 定义符号，包含积分变量 t
+a, t, x, y = symbols('a, t, x, y')
+# 中间变量
+p_n = a + x
+# 绘图表达式
+expressions = {'A': (a-x)**2+y, 'B': integrate(p_n*t, (t, 0, y))}
+# 固定参数与分析范围
+assigns = {a: 2, y: 0.5}
+the_var = x
+ranges = [0, 2, 0.02]
+# 图例直接作为绘图参数传入
+legend_options = dict(ncol=1, loc='best', borderpad=0.2,
+                      labelspacing=0.2, handlelength=1.5, handletextpad=0.2,
+                      columnspacing=0.3, fontsize=14)
+the_plt = draw_lines(expressions=expressions, assigns=assigns,
+                     the_var=the_var, ranges=ranges, legend_options=legend_options)
+the_plt.show()
+```
+
+完整示例：`make_example('draw_lines')`，或打开 [draw_lines.py](docs/examples/draw_lines.py)。
+
+![公式曲线](docs/screenshots/draw_lines-plot.png)
+
+### 4.3 同时分析两个参数，绘制三维曲面【draw_3D 函数】
+
+通过 `the_var_x` 和 `the_var_y` 指定两个分析参数，通过 `start_end_x` 和 `start_end_y` 分别指定其取值范围。`precision` 控制采样精度，`elevation` 和 `azimuth` 控制观察视角；`colors` 和 `linestyles` 按表达式的顺序设置曲面的颜色和线型。
+
+完整示例可用 `make_example('draw_3D')` 生成，也可直接运行 [draw_3D.py](docs/examples/draw_3D.py)。示例使用默认的曲面配色、不透明度和线条设置；其中 `edgecolor=None` 表示不绘制曲面网格线。
+
+![三维函数曲面](docs/screenshots/draw_3D-plot.png)
+
+### 4.4 比较各模式的最大值区域【draw_max_area 函数】
+
+`draw_max_area` 在每个参数组合下计算所有表达式，并标出取值最大的模式所对应的区域。`texts` 用于自定义区域名称，`colors` 和 `patterns` 分别设置填充颜色和纹理；`text_fsize_add` 设置区域标签字号相对于全局字号的增量，负值表示缩小字号。
+
+完整示例可用 `make_example('draw_max_area')` 生成，也可直接运行 [draw_max_area.py](docs/examples/draw_max_area.py)。图例默认关闭（`show_legend=False`），设为 `True` 即可显示。默认的 `dropout=0.001` 会忽略面积小于整个绘图区 0.1% 的独立分块；设为 `0` 可关闭过滤，详见第 3.3 节。
+
+### 4.5 展示各区域内表达式的大小关系【draw_detail_area 函数】
+
+`draw_detail_area` 按表达式取值的大小顺序划分区域。`prefix` 设置区域编号的前缀；`numbers` 可设为 `roman`、`letter` 或 `number`，分别使用罗马数字、大写英文字母或阿拉伯数字编号。
+
+默认的 `dropout=0.001` 会忽略面积小于整个绘图区 0.1% 的独立分块；设为 `0` 则保留全部分块。区域颜色和填充纹理按过滤后实际生成的区域顺序应用。
+
+完整示例可用 `make_example('draw_detail_area')` 生成，也可直接运行 [draw_detail_area.py](docs/examples/draw_detail_area.py)。在 `legend_options` 中设置 `loc='outside right'`，可将图例放在图外右侧。
+
+![完整大小关系区域](docs/screenshots/draw_detail_area-plot.png)
+
+### 4.6 表格绘图和 Python 扩展【plot_table 函数】
+
+```python
+from betu import *
+data = {'Category': ['A', 'B', 'C'], 'Amount': [40, 35, 25]}
+the_plt = plot_table(data=data, x='Category', series=['Amount'], kind='pie')
+the_plt = plot_context(the_plt)
+the_plt.title('构成 Composition')
+the_plt.show()
+```
+
+`plot_context` 为图形添加标题时预留高度，并使相对图片保存路径以 Documents 文件夹为起点。使用 `make_example('plot_table')` 可生成表格绘图的完整示例；使用 `make_example('data_pie')`、`make_example('data_box')`、`make_example('data_hist')` 等可生成指定图形类型的示例。
+
+读取 Excel 后绘图：
+
+```python
+from betu import *
+headers, rows = read_table('table-examples.xlsx', sheet='pie')
+data = {name: [row[i] for row in rows] for i, name in enumerate(headers)}
+the_plt = plot_table(data=data, x='Category', series=['Amount'], kind='pie')
+the_plt.show()
+```
+
+`kind` 用于指定图形类型，可取 `line`、`bar`、`barh`、`box`、`pie`、`hist` 或 `scatter`，依次对应折线图、条形图、水平条形图、箱型图、饼状图、直方图和散点图。各类型的数据要求见第 3.6 节。
+
+## 附录
+
+### A. 附录 A：LaTeX 的使用口诀
+
+下标用 `_`，上标用 `^`；希腊字母名称前加 `\`，多个字符的上下标用 `{}` 括起来。需要显示为数学公式时，再用 `$` 包裹整个名称。
+
+| 要显示的内容 | 图例／坐标名称写法 |
+| --- | --- |
+| 下标 | `$p_n$` |
+| 上标和下标 | `$\pi_M^{NN}$` |
+| 希腊字母 | `$\alpha$`、`$\delta$` |
+| 分式 | `$\frac{a}{b}$` |
+
+LaTeX 用于显示名称，计算式仍使用 Python 语法。例如名称可用 `$x^2$`，右侧计算必须写 `x**2`。
+
+### B. 附录 B：颜色的表示
+
+颜色可以写成名称（如 `blue`、`teal`），也可以写成十六进制色值（如 `#336699`）。在界面中，可直接从带色块的下拉列表中选择，或点击“选择颜色...”打开调色窗口，无需记忆色值。
+
+![常用颜色示意](docs/screenshots/colors.png)
+
+### C. 附录 C：线型的表示
+
+`solid` 为实线，`dashed` 为虚线，`dotted` 为点线，`dashdot` 为点划线。界面提供带预览符号的下拉选项。
+
+![线型示意](docs/screenshots/lines.png)
+
+### D. 附录 D：区域填充纹理的表示
+
+`patterns` 用列表指定各区域的填充纹理，可包含 `None`、`'/'`、`'\\'`、`'x'`、`'-'`、`'+'`、`'o'`、`'.'`、`'*'` 等。其中 `None` 表示不添加纹理，重复字符通常会增加纹理密度。在 Python 字符串中，一个反斜线需要写成两个反斜线，即 `'\\'`。
+
+![填充纹理示意](docs/screenshots/patterns.png)
+
+### E. 附录 E：标记点形状
+
+常用标记包括：`o`（圆形）、`s`（方形）、`*`（星形）、`P`（实心加号）、`X`（实心叉号）、`D`（菱形）和 `v`（下三角）。`None` 表示不显示标记。可在界面中为每条曲线分别设置标记形状和大小。
+
+![标记形状示意](docs/screenshots/markers.png)
+
+### F. 附录 F：3D 图的视角
+
+`elevation` 表示相对于水平面的观察仰角，`azimuth` 表示绕竖轴旋转的方位角，`roll` 表示画面绕视线方向旋转的角度。三者共同决定三维图的观察视角，可在“绘图风格设置 → 坐标与其他设置”中调整。默认值分别为 15°、45° 和 0°。
+
+![默认三维观察视角](docs/screenshots/draw_3D-plot.png)

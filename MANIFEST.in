@@ -1,0 +1,5 @@
+include README.md LICENSE requirements.txt conftest.py
+graft docs
+graft tests
+prune docs/examples/.ipynb_checkpoints
+global-exclude *.py[cod] .DS_Store Thumbs.db

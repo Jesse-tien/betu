@@ -45,6 +45,7 @@ betu/assets/help/10-data.png
 betu/assets/help/12-preview.png
 betu/assets/help/14-jupyter-setup.png
 betu/assets/help/15-jupyter-plot.png
+betu/assets/help/17-savecode.png
 docs/make_marker_chart.py
 docs/examples/BeTu-Jupyter.ipynb
 docs/examples/bar.csv
@@ -75,6 +76,7 @@ docs/examples/scatter.csv
 docs/examples/smart-regions.py
 docs/examples/table-examples.xlsx
 docs/screenshots/01-main.png
+docs/screenshots/01-start.png
 docs/screenshots/02-formula.png
 docs/screenshots/03-symbols.png
 docs/screenshots/04-latex.png
@@ -118,3 +120,4 @@ docs/screenshots/smart-regions-plot.png
 tests/test_betu.py
 tests/test_refinements.py
 tests/test_table_import.py
+tests/test_version_101.py

@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: betu
-Version: 1.0.0
+Version: 1.0.1
 Summary: 彼图（BeTu）科研仿真与Excel数据绘图工具，支持图形界面、符号公式计算、数值仿真、论文标准绘图风格和Python扩展。BeTu——Be better tool for U! BeTu scientific simulation and Excel data plotting tool, supporting graphical user interface, symbolic formula calculation, numerical simulation, paper-standard plotting styles, and Python extension.
 Author-email: Yu-Xin Tian <tianyuxin@mail.neu.edu.cn>
 License: MIT
@@ -16,13 +16,15 @@ Requires-Dist: xlrd>=2.0.1
 Requires-Dist: antlr4-python3-runtime==4.11.1
 Dynamic: license-file
 
-# 简单易用的科研仿真与 Excel 数据绘图工具——彼图 BeTu 使用说明【1.0.0】
+# 简单易用的科研仿真与 Excel 数据绘图工具
+
+# ——彼图 BeTu 使用说明【中文版】
 
 **彼图（BeTu）是一款科研仿真与 Excel 数据绘图工具，集符号计算、数值仿真和数据绘图于一体。你可以通过图形界面完成操作，也可以使用 Python 编写和扩展绘图程序，并按论文排版需要调整图形样式。**
 
 **BeTu——Be better tool for U!**
 
-作者：**田雨鑫｜东北大学｜博士**。联系邮箱：[tianyuxin@mail.neu.edu.cn](mailto:tianyuxin@mail.neu.edu.cn)。
+作者：**田雨鑫（Jesse）｜东北大学｜博士**。联系邮箱：[tianyuxin@mail.neu.edu.cn](mailto:tianyuxin@mail.neu.edu.cn)。
 
 BeTu is a scientific simulation and Excel data plotting tool that combines symbolic computation, numerical simulation, and data visualization. Use its graphical interface or extend your workflow with Python, and customize plots for research papers.
 
@@ -81,7 +83,7 @@ macOS 上通常使用 `python3` 命令。彼图采用跨平台的 Qt5 界面，�
 如果已获取安装包，请在安装包所在文件夹打开终端。在 Windows 中，可以打开该文件夹，在资源管理器的地址栏输入 `cmd` 并按回车，再执行以下命令：
 
 ```shell
-pip3 install betu-1.0.0-py3-none-any.whl
+pip3 install betu-1.0.1-py3-none-any.whl
 ```
 
 发布到 PyPI 后，也可按包名安装：
@@ -110,6 +112,8 @@ makefig()
 ```
 
 在 Windows 11 中，也可以打开开始菜单，搜索 `betu`；如果搜索结果中显示该程序，点击即可启动。还可以在 Python 安装目录下的 `Scripts` 文件夹中找到 `betu.exe`，例如 `C:\Python311\Scripts\betu.exe`。右键点击该文件，选择“发送到 → 桌面快捷方式”，之后即可通过桌面快捷方式启动；若右键菜单未显示“发送到”，可先点击“显示更多选项”。具体路径取决于 Python 的安装位置。
+
+<img src="./docs/screenshots/01-start.png" alt="image-20260908093146353" style="zoom:50%;" />
 
 启动后，主界面会显示下图中的五个标签页。右上角可切换中文和英文界面；点击“关于...”可查看版本、作者和联系邮箱。
 
@@ -149,13 +153,13 @@ $\pi_R$ = integrate(p_n*t+b-3*t**2, (t, p_n-c, p_n+a*b))
 
 <img src="docs/screenshots/03-symbols.png" alt="小型符号面板" style="zoom: 50%;" />
 
-**第四步：转换已有公式。** 点击“LaTex转换...”，选择公式来源，粘贴需要计算的表达式，点击“转换”后复制结果。来源列表依次为 **Mathematica、MATLAB、通用 LaTeX**，每项都有对应的操作提示。
+**第四步：转换已有公式。** 点击“表达式转换...”，选择公式来源，粘贴需要计算的表达式，点击“转换”后复制结果。来源列表依次为 **Mathematica、MATLAB、通用 LaTeX**，每项都有对应的操作提示。
 
 在 Mathematica 中，选中公式后右键选择“复制为 → LaTeX”，再将内容粘贴到转换窗口。在 MATLAB 中，复制赋值语句右侧的表达式即可。来自其他来源的 LaTeX（例如由 AI 工具识别得到的公式）可使用“通用 LaTeX”转换。转换结果以 `**` 表示乘方，并将变量 `lambda` 写成 `lamda`，以符合 Python 和 SymPy 的语法要求。由于不同来源的 LaTeX 可能存在不规范写法或歧义，转换无法保证完全准确；使用前请核对变量、上下标、乘方和积分上下限。
 
-![LaTeX 转换窗口](docs/screenshots/04-latex.png)
+![表达式转换窗口](docs/screenshots/04-latex.png)
 
-表达式、运行信息、LaTeX 转换和高级设置中的代码编辑区均提供“自动换行”选项，并支持行号、语法高亮和 **Ctrl+鼠标滚轮** 缩放。参数赋值框始终自动换行，不显示行号，也无需单独开启换行。自动换行只影响显示，不改变代码内容。出现语法错误时，程序会提示并标记出错行；计算过程中出现的错误会通过状态栏或错误对话框提示。
+表达式、运行信息、表达式转换和高级设置中的代码编辑区均提供“自动换行”选项，并支持行号、语法高亮和 **Ctrl+鼠标滚轮** 缩放。参数赋值框始终自动换行，不显示行号，也无需单独开启换行。自动换行只影响显示，不改变代码内容。出现语法错误时，程序会提示并标记出错行；计算过程中出现的错误会通过状态栏或错误对话框提示。
 
 ### 3.2 单参数数值分析
 
@@ -187,7 +191,7 @@ $\pi_R$ = integrate(p_n*t+b-3*t**2, (t, p_n-c, p_n+a*b))
 
 程序会根据数据范围自动调整坐标刻度间隔，并在适当时使用科学计数法。绘图中的中文优先使用宋体，英文优先使用 Times New Roman，中英混排时也按此规则选择字体。如果系统未安装相应字体，程序会使用其他可用字体。
 
-**编辑代码：** “运行信息”区域中的代码默认锁定。勾选“编辑代码”后可以直接修改，此时出图、复制和保存都会使用编辑区中的代码。取消勾选后，程序会根据代码更新界面控件；如果无法从代码中恢复设置，会保留编辑状态并提示检查。
+**查看代码：** “运行信息”区域中的代码始终只读，可查看和复制。请通过表达式、参数、绘图风格和高级设置调整绘图内容；出图、复制和保存时，程序会根据当前界面设置重新生成完整代码。
 
 **保存和打开代码：** 按 **Ctrl+S** 或点击保存按钮即可保存。首次保存时，会弹出对话框供你选择 `.py` 文件的位置和名称；已打开或保存过的代码会直接更新原文件。按钮会相应显示“保存代码(S)...”或“更新代码(S)”。加载案例后，再次保存时会按新文件处理。“打开代码...”可恢复对应标签页中的表达式、中间变量、参数、样式、标题、图例和高级代码；“复制程序代码”可将完整脚本复制到剪贴板。
 
@@ -223,7 +227,11 @@ $\pi_R$ = integrate(p_n*t+b-3*t**2, (t, p_n-c, p_n+a*b))
 
 四模式利润比较案例见 [paper-draw_max_area.py](docs/examples/paper-draw_max_area.py)，可通过“打开代码...”加载。横轴为 `alpha`，范围为 `0.7～0.8`；纵轴为 `b`，范围为 `0～0.08`。
 
+“模式比较”的“区域文字标注”默认留空，对应 `texts=None`，此时使用表达式名标注。“区域 1、区域 2……”仅用于选择样式，不会填入标注框。可以只修改某一项，其余空白项仍使用默认标注；全部清空后恢复 `texts=None`。区域填充纹理下拉列表提供图案预览。
+
 ### 3.4 双参数分析——关系区域比较
+
+图内区域标注由“绘图风格设置 → 坐标与其他设置”中的“区域标注前缀”和“区域编号格式”生成，不提供逐区域文字输入框。例如，前缀为 `Region`、编号为罗马数字时显示 `Region I、Region II……`；改为字母时显示 `Region A、Region B……`。右侧图例使用相同区域名称，并列出对应的完整大小关系。
 
 “关系区域比较”显示每个区域内各表达式取值的完整大小顺序。例如，某个区域可能满足 `A > B > C`，另一个区域则满足 `B > A > C`。表达式输入和参数赋值的方法与“模式比较”相同。
 
@@ -272,6 +280,8 @@ $\pi_R$ = integrate(p_n*t+b-3*t**2, (t, p_n-c, p_n+a*b))
 如果需要将数据粘贴到表格的指定位置，先选中起始单元格，再按 **Ctrl+V**。这种方式会粘贴复制内容中的全部行，不将首行提取为列名。
 
 **第二步：选择图形类型、横轴列和数值系列。** “数值系列”是需要绘制的数值列，多数图形支持同时选择多个系列。已选作横轴的列不能再选为数值系列。不同图形的选择方法见下表，其中直方图无需指定横轴列，饼状图只使用一个数值系列。
+
+系列列表旁的“全选”可选中除当前横轴列外的所有系列；“全不选”可清空选择。批量选择后仍可逐项调整。
 
 表格中的数据可以直接编辑，双击列标题可修改列名，按住 **Ctrl** 并滚动鼠标滚轮可缩放表格。表格始终显示网格，便于对齐查看数据。
 
@@ -511,3 +521,509 @@ LaTeX 用于显示名称，计算式仍使用 Python 语法。例如名称可用
 `elevation` 表示相对于水平面的观察仰角，`azimuth` 表示绕竖轴旋转的方位角，`roll` 表示画面绕视线方向旋转的角度。三者共同决定三维图的观察视角，可在“绘图风格设置 → 坐标与其他设置”中调整。默认值分别为 15°、45° 和 0°。
 
 ![默认三维观察视角](docs/screenshots/draw_3D-plot.png)
+
+---
+
+# Simple Scientific Simulation and Excel Data Plotting Tool
+
+# —BeTu User Guide (English Version)
+
+**BeTu is a scientific simulation and Excel data plotting tool that integrates symbolic computation, numerical simulation, and data visualization. You can operate through the graphical interface or use Python to write and extend plotting programs, adjusting graphic styles to meet the formatting requirements of academic papers.**
+
+**BeTu—Be better tool for U!**
+
+Author: **Yu-Xin Tian (Jesse)｜Northeastern University｜Ph.D.** Contact email: [tianyuxin@mail.neu.edu.cn](mailto:tianyuxin@mail.neu.edu.cn).
+
+BeTu is a scientific simulation and Excel data plotting tool that combines symbolic computation, numerical simulation, and data visualization. Use its graphical interface or extend your workflow with Python, and customize plots for research papers.
+
+## 1. What Can It Do?
+
+BeTu provides two usage modes: if you are not familiar with Python, enter formulas or import Excel data in the interface and follow the prompts to complete plotting; if you are familiar with Python, you can directly call plotting functions or modify the complete code generated by the interface.
+
+Five tabs correspond to the following tasks:
+
+| Tab | Purpose | Python Function |
+| --- | --- | --- |
+| Formula to Curves | Change one parameter and compare trends of multiple expressions | `draw_lines` |
+| Mode Comparison | Change two parameters and find which expression has the maximum value under each combination | `draw_max_area` |
+| Region Relationships | Change two parameters and display the ordering of expression values | `draw_detail_area` |
+| Formula to 3D | Draw expressions as 3D surfaces | `draw_3D` |
+| Data to Plots | Import Excel, CSV, or paste data directly for plotting | `plot_table` |
+
+![BeTu main window](docs/screenshots/01-main.png)
+
+**Single-parameter curve**: Observe how profit, cost, or other indicators change for different modes when a parameter varies.
+
+![Formula curves](docs/screenshots/paper-draw_lines-plot.png)
+
+**Mode Comparison and Region Relationships**: The former shows which mode has the largest indicator value, while the latter shows the complete order of all modes’ indicator values. When profit is used as the indicator, this allows comparison of the profitability of each mode.
+
+![Mode comparison plot](docs/screenshots/paper-draw_max_area-plot.png)
+
+![Region relationship plot](docs/screenshots/paper-draw_detail_area-plot.png)
+
+**3D Surface**: Observe the impact of two parameters on the result simultaneously.
+
+![3D surfaces](docs/screenshots/paper-draw_3D-plot.png)
+
+**Table data plotting**: Supports line charts, bar charts, horizontal bar charts, box plots, pie charts, histograms, and scatter plots.
+
+![Data table and chart selection](docs/screenshots/10-data.png)
+
+## 2. How to Install and Launch?
+
+### 2.1 Install Python [Skip if Python 3.8 or higher is already installed]
+
+Download and install Python from the [official Python website](https://www.python.org/downloads/). During installation on Windows, check **Add Python to PATH**. Python 3.10 or 3.11 is recommended; this version was tested on Windows with Python 3.11.
+
+Open a terminal and run the following command to check the version:
+
+```shell
+python --version
+```
+
+On macOS, the command `python3` is typically used. BeTu uses a cross-platform Qt5 interface but has not been fully tested on real Mac devices. Font rendering may vary depending on installed fonts.
+
+### 2.2 Install betu
+
+If you have obtained the installation package, open a terminal in the folder containing it. On Windows, you can open the folder, type `cmd` in the address bar of File Explorer, press Enter, and then execute:
+
+```shell
+pip3 install betu-1.0.1-py3-none-any.whl
+```
+
+After publishing to PyPI, you can also install by package name:
+
+```shell
+pip3 install betu
+```
+
+The installation will automatically install NumPy, SymPy, Matplotlib, PyQt5, and dependencies required for reading Excel and parsing LaTeX. Using the BeTu interface does not require installing Jupyter, IPython, or notebook.
+
+### 2.3 Launch betu
+
+After installation, run `betu` to open the interface. On Windows, you can also press **Win+R** to open the Run dialog, type `betu`, and press Enter. This command uses the GUI entry point and will not pop up an extra black command window.
+
+You can also start from the terminal:
+
+```shell
+python -m betu
+```
+
+Or from within Python:
+
+```python
+from betu import *
+makefig()
+```
+
+On Windows 11, you can also open the Start menu, search for `betu`; if the program appears in the results, click to launch. Alternatively, you can find `betu.exe` in the `Scripts` folder of the Python installation directory, e.g., `C:\Python311\Scripts\betu.exe`. Right-click the file and select “Send to → Desktop shortcut” to create a desktop shortcut; if “Send to” does not appear in the context menu, first click “Show more options”. The exact path depends on where Python is installed.
+
+<img src="./docs/screenshots/01-start.png" alt="image-20260908093146353" style="zoom:50%;" />
+
+After launching, the main interface displays the five tabs shown below. In the upper-right corner, you can switch between Chinese and English interfaces; click “About...” to view the version, author, and contact email.
+
+![BeTu main window](docs/screenshots/01-main.png)
+
+## 3. How to Use the Interface? [No Python Programming Background Required]
+
+The basic sequence for formula plotting is: **Enter expressions → Recognize formulas → Select analysis parameters → Set analysis range and fixed values for remaining parameters → Adjust plot style → Generate plot**. For importing table data, see Section 3.6.
+
+Each tab provides “Load example”. When using it for the first time, we recommend loading an example, clicking “Plot...” to see the result, and then trying to modify parameters or styles. This chapter also uses the profit comparison of four modes (NW, BW, NS, BS) as an example to introduce different analysis methods. Complete formulas and parameters can be found in [paper-draw_lines.py](docs/examples/paper-draw_lines.py), which can be loaded via “Open code...”.
+
+### 3.1 Entering Expressions and Using Symbol Tools
+
+**Step 1: Enter expressions line by line.** Each line contains a name and a calculation, separated by `=`. The name identifies the curve or mode and appears in legends or region labels:
+
+```python
+$p_a$ = 2*a*x + b*x**2
+$p_b$ = a*x + 2*b*x**2
+```
+
+Names can include LaTeX enclosed in `$`, e.g., `$\pi_M^{NN}$`. The calculation on the right uses Python syntax: multiplication is written as `*`, exponentiation as `**`. For example, `2a` should be written as `2*a`, and the square of `x` as `x**2`. Since `lambda` is a Python keyword, the variable $\lambda$ should be written as `lamda`.
+
+**Step 2 (optional): Define intermediate variables with `:=`.** If you need to reuse a calculation result, you can give it a name and reference it in plotting expressions. Intermediate variable definitions can be placed before or after the plotting expressions:
+
+```python
+p_n := 2*a + b - c**3/2
+$\pi_R$ = integrate(p_n*t+b-3*t**2, (t, p_n-c, p_n+a*b))
+```
+
+In this example, `p_n` is an intermediate variable; it will not be plotted as a separate curve nor included in the `symbols` definition of the generated code. The integration variable `t` will be listed among symbols; if it only appears inside the integral and is eliminated after integration, it will not appear in the list of analysis parameters for the horizontal/vertical axes and does not need a fixed value assigned. Function names like `integrate`, `sin`, `sqrt` will not be recognized as parameters requiring assignment.
+
+Intermediate variable names can only contain letters, underscores, and digits, and cannot start with a digit. Intermediate variables support reassignment and also allow indexing into arrays, lists, or tuples. Before indexing, ensure the result supports positional access: for example, a plain `integrate(...)` usually returns an expression and cannot be followed by `[0]`.
+
+![Formula input, analysis parameters, and generated code](docs/screenshots/02-formula.png)
+
+**Step 3: Insert symbols using “Ω…”.** Buttons in the symbol panel are labeled with symbols such as `α`, `∫`, `∑`. Clicking them inserts the corresponding Python notation into the editor. The panel stays above the main window, allowing you to continue editing expressions while it is open. When inserting symbol names, the program automatically adds necessary spaces to prevent merging with adjacent variable names.
+
+<img src="docs/screenshots/03-symbols.png" alt="Small symbol panel" style="zoom: 50%;" />
+
+**Step 4: Convert existing formulas.** Click “Expression conversion...”, select the source of the formula, paste the expression to be calculated, click “Convert”, and copy the result. The sources are listed in order: **Mathematica, MATLAB, General LaTeX**, each with corresponding instructions.
+
+In Mathematica, select the formula, right-click, choose “Copy As → LaTeX”, and paste the content into the conversion window. In MATLAB, copy the expression to the right of the assignment statement. For LaTeX from other sources (e.g., formulas recognized by AI tools), use “General LaTeX”. The conversion result uses `**` for exponentiation and writes the variable `lambda` as `lamda` to comply with Python and SymPy syntax. Because LaTeX from different sources may contain non-standard notations or ambiguities, conversion accuracy cannot be guaranteed; please verify variables, subscripts, superscripts, exponentiation, and integration limits before use.
+
+![Expression conversion window](docs/screenshots/04-latex.png)
+
+The expression editor, runtime information, expression conversion, and advanced settings code editor all provide a “Word wrap” option and support line numbers, syntax highlighting, and **Ctrl+Mouse Wheel** zooming. Parameter assignment boxes always wrap automatically, do not show line numbers, and do not require separate wrapping. Word wrapping affects display only and does not alter code content. When syntax errors occur, the program highlights the erroneous line; errors during computation are reported via the status bar or error dialog.
+
+### 3.2 Single-Parameter Numerical Analysis
+
+1. Switch to “Formula to Curves”, click “Load example”, or enter your own expressions and click “Recognize formulas”.
+2. In “X parameter”, select the variable to study, and fill in the “Start” and “End” values of the range. The program automatically calculates the step size based on the range; you can adjust it manually.
+3. In “Parameter values”, fill in fixed values for the remaining parameters, e.g., `a=2, y=0.5`, separated by commas or newlines. The parameter currently being analyzed does not need a fixed value.
+
+   When switching analysis parameters, the program automatically updates the assignment box and temporarily remembers the last fixed value used for each parameter. For example, if you previously set `y=0.5`, when you switch to analyze `y`, that item disappears from the assignment box; after switching back to another parameter, `y=0.5` reappears. Each tab retains its own assignment history. Parameters without historical assignments are initially filled with `1.0`; modify them as needed for your model. For two-parameter plots, both the horizontal and vertical axis parameters are excluded from the assignment box simultaneously.
+
+![Formula input, analysis parameters, and generated code](docs/screenshots/02-formula.png)
+
+4. Click “Plot Style Settings...” and open “General”. Enter the title and axis labels, then adjust the font size, figure dimensions, and text rotation. **Leave the title blank to hide it**; if a title is provided, the program increases image height appropriately to accommodate it.
+
+![General plot settings](docs/screenshots/05-style-common.png)
+
+5. In “Series / Regions”, select the curve to modify, then set line width, line style, color, marker shape, and marker size. The selection list is generated based on actual plotting expressions and does not include intermediate variables; modifications made while switching curves are preserved. Color, line style, and marker lists provide color swatches, line previews, and shape icons for easy selection. For additional colors, click “Choose Color...”.
+
+![Individual series and region styles](docs/screenshots/05-style-series.png)
+
+![Color swatch selector](docs/screenshots/05-colors.png)
+
+6. Switch to the “Legend” page in the same window to adjust legend position, number of columns, font size, and spacing. The default legend has 1 column; the “Show legend” checkbox on the main interface controls whether the legend is displayed.
+
+![Legend settings](docs/screenshots/05-style-legend.png)
+
+7. Click “OK”, then click “Plot...”. The preview window includes the Matplotlib toolbar for zooming, panning, and saving images; close the preview to return to the main interface.
+
+![Plot preview and toolbar](docs/screenshots/12-preview.png)
+
+The program automatically adjusts coordinate tick intervals based on data range and uses scientific notation when appropriate. For Chinese text, Song Ti is preferred; for English, Times New Roman is preferred; mixed Chinese-English text follows the same rule. If the system lacks these fonts, other available fonts are used.
+
+**View code:** The “Status / Executable Python code” area is always read-only. Change formulas, parameter values, plot styles, or Advanced Settings through the interface. Plotting, copying, and saving regenerate the complete script from the current settings.
+
+**Save and Open Code:** Press **Ctrl+S** or click the save button to save. On first save, a dialog asks for the `.py` file location and name; already opened or saved code updates the original file directly. The button accordingly shows “Save Code (S)...” or “Update Code (S)”. After loading an example, saving again treats it as a new file. “Open code...” restores the expressions, intermediate variables, parameters, styles, titles, legends, and advanced code for the corresponding tab; “Copy Python code” copies the full script to the clipboard.
+
+**Save Image:** Use the save button in the preview window toolbar, or specify an image save location in “Plot Style Settings → Axes and More”. Code files are for continued editing and repeated plotting; image files are for presentation or paper layout.
+
+### 3.3 Two-Parameter Analysis – Mode Comparison
+
+The default sampling precision for Mode Comparison, Region Relationships, and 3D plots is **1000**, meaning 1000 sample points in both horizontal and vertical directions. This can be adjusted in “Plot Style Settings → Axes and More”. Sampling precision determines grid density for computation; DPI for saving images determines output resolution; they are different concepts.
+
+Switch to “Mode Comparison”, enter the expressions to compare, select two different analysis parameters for the horizontal and vertical axes, and fill in the start and end values for their ranges. Fixed values for remaining parameters go in “Parameter values”.
+
+![Mode comparison settings](docs/screenshots/07-mode.png)
+
+After clicking “Plot...”, each region is labeled with the mode having the maximum value in that region. By default, no legend is shown; check “Show legend” to display it; coordinate background does not show grid lines.
+
+In “Plot Style Settings...”, you can adjust styles for “Region 1, Region 2…” individually, in the order of the plotting expressions. **When the same mode is distributed across multiple disconnected regions, each component meeting the area threshold is labeled separately, but only one entry appears in the legend.** If text cannot fit inside a retained region, the label is moved outside and an arrow points to the corresponding region.
+
+**Filter small regions:** In “Plot Style Settings → Axes and More”, use “Minimum region area fraction” to set the minimum retained area. This corresponds to the code parameter `dropout` and applies to both Mode Comparison and Region Relationships.
+
+| `dropout` | Meaning |
+| --- | --- |
+| `0.001` (default) | Ignore independent blocks smaller than 0.1% of the total plotting area |
+| `0.01` | Ignore independent blocks smaller than 1% of the total plotting area |
+| `0` | Do not filter small areas |
+
+Area ratio is estimated based on the sampling grid; each disconnected component is checked separately, and blocks belonging to the same mode are not combined. Blocks below the threshold do not show fill, border, label, or leader arrows; other blocks are retained normally. Larger `dropout` hides more regions. Saved code preserves this setting, e.g., `dropout = 0.001`.
+
+![Mode comparison plot](docs/screenshots/paper-draw_max_area-plot.png)
+
+![Separately labeled components of the same mode](docs/screenshots/disconnected-modes-plot.png)
+
+The disconnected blocks example can be opened directly from [disconnected-modes.py](docs/examples/disconnected-modes.py), or generated with `make_example('disconnected_modes')` for complete code.
+
+For the four-mode profit comparison case, see [paper-draw_max_area.py](docs/examples/paper-draw_max_area.py), loadable via “Open code...”. Horizontal axis: `alpha`, range `0.7~0.8`; vertical axis: `b`, range `0~0.08`.
+
+In Mode Comparison, leave “Region label text” blank to keep `texts=None` and use expression names. “Region 1”, “Region 2”, and so on are selector entries, not default label text. Custom labels can be set individually, while blank entries stay automatic; clearing all entries restores `texts=None`. The region fill list includes hatch previews.
+
+### 3.4 Two-Parameter Analysis – Region Relationships
+
+Region labels are generated from “Region label prefix” and “Region numbering format” in “Plot Style Settings → Axes and More”. There is no text field for individual region labels. With the prefix `Region`, Roman numerals give `Region I, Region II, …`, while letters give `Region A, Region B, …`. The legend on the right uses the same names followed by the complete ordering of expression values.
+
+“Region Relationships” shows the complete ordering of expression values within every region. For example, one region might satisfy `A > B > C`, while another satisfies `B > A > C`. Expression input and parameter assignment are the same as in “Mode Comparison”.
+
+Click “Load example”; the program fills in profit expressions and parameters for the four modes NW, BW, NS, BS. Horizontal axis: `alpha`, range `0.7~0.8`; vertical axis: `b`, range `0~0.08`. Remaining parameters fixed: `E=2.0, c_n=0.2, c_r=0.1, delta=0.8, e_n=1.0, e_r=0.6, k=1.1, p_e=0.1`. Complete code can be generated with `make_example('draw_detail_area')` or loaded via “Open code...” from [draw_detail_area.py.](docs/examples/draw_detail_area.py.)
+
+![Region relationship settings](docs/screenshots/08-detail.png)
+
+![Region relationship plot](docs/screenshots/draw_detail_area-plot.png)
+
+The legend is placed outside on the right by default to avoid obscuring region content. After the first plot, the style list displays “Region 1, Region 2…” according to the actual generated regions. Modifying formulas, parameters, or ranges and regenerating the plot updates the list. You can adjust each region’s color, fill pattern, label background, and label position offset individually.
+
+The program first filters small blocks using `dropout` (see Section 3.3), then arranges label positions for retained regions. The default “Avoid small-region label overlap with leader arrows” first tries to place text inside the region; if space is insufficient, labels are arranged outside above the plot with arrows pointing to the corresponding region. When manually moving a label outside its region via position offset, the program also adds an arrow to indicate the correspondence.
+
+In the paper example, Region II and Region III have been moved to the upper-middle inside the plot, with short arrows pointing to the corresponding small areas. You can adjust `dropout` or disable automatic avoidance in “Axes and More”, or modify label position offsets in the region style.
+
+To see the effect of leader arrows, try the example comparing `A=x`, `B=y`, `C=0.88`. The narrow regions formed make it easy to observe labeling when labels are moved outside.
+
+![Small regions with leader arrows](docs/screenshots/smart-regions-plot.png)
+
+Open the complete small region example from [smart-regions.py](docs/examples/smart-regions.py) or generate it with `make_example('smart_regions')`.
+
+![Region relationship plot](docs/screenshots/paper-draw_detail_area-plot.png)
+
+Complete code for the above figure is in [paper-draw_detail_area.py.](docs/examples/paper-draw_detail_area.py.) Relationship plots do not display coordinate grids; region label text automatically uses black or white based on background lightness for readability.
+
+### 3.5 Two-Parameter Analysis – 3D Surface
+
+Switch to “Formula to 3D”, click “Load example” to load the four-mode profit expressions and fixed parameters from Section 3.4. Horizontal axis: `alpha`, range `0.7~0.8`; vertical axis: `b`, range `0~0.08`; z-axis represents profit. Click “Plot...” to observe the influence of the two parameters on each mode’s profit through four surfaces.
+
+![3D surface settings](docs/screenshots/09-surface.png)
+
+3D plots provide default surface colors and line styles. To adjust, modify each surface’s color and line style in “Plot Style Settings...”, and adjust opacity, surface mesh line color, elevation, and azimuth in “Axes and More”. Surface mesh lines help depict the shape of the surface and are distinct from coordinate background grids; the 3D plot tab does not provide a toggle for coordinate background grids.
+
+When adjacent z-axis tick labels become indistinguishable due to insufficient decimal places, the program automatically increases the number of decimals. When exporting images, margins are reserved for the names of the three axes to prevent text clipping.
+
+![3D surfaces](docs/screenshots/paper-draw_3D-plot.png)
+
+Complete examples are in [draw_3D.py](docs/examples/draw_3D.py) and [paper-draw_3D.py](docs/examples/paper-draw_3D.py), or generate with `make_example('draw_3D')`. See Appendix F for the meaning of 3D viewing parameters.
+
+### 3.6 Direct Plotting from Excel Data
+
+**Step 1: Import or paste data.** Open “Data to Plots”, click “Import Excel/CSV...” and select the file. If the workbook contains multiple sheets, the program prompts you to choose one. Alternatively, copy data in Excel and click “Paste data”. Both methods open an import preview and automatically determine whether the first row is column headers; you can adjust this setting after checking the preview.
+
+If the copied first row contains headers like “Student ID, Weekly Study Hours, Math Score”, check “First row contains column names”. If the first row already contains data like `S001`, `16.8`, `76.5`, uncheck it; the program keeps this row and auto-generates column names like “Column 1, Column 2, Column 3”. After verifying the preview and row count, click “Import Data”; click “Cancel” to keep the current table. Cases like purely textual data or numeric column names may be hard to distinguish automatically; rely on the preview content.
+
+To paste data into a specific cell in the table, first select the starting cell, then press **Ctrl+V**. This method pastes all rows from the copied content and does not extract the first row as column names.
+
+**Step 2: Choose chart type, horizontal axis column, and value series.** “Series (multiple selection)” are the numeric columns to plot; most chart types support selecting multiple series simultaneously. Columns already selected as the horizontal axis cannot be chosen as value series. Selection methods vary by chart type as shown in the table below; histograms do not require a horizontal axis column, and pie charts use only one value series.
+
+Click “Select all” beside the series list to select every series except the current X column. “Deselect all” clears the selection. You can still adjust individual selections afterward.
+
+Data in the table can be edited directly; double-click a column header to rename it; hold **Ctrl** and scroll the mouse wheel to zoom the table. The table always displays grid lines for easy alignment.
+
+To delete data, select cells and click “Delete Row(s)” or “Delete Column(s)” to remove entire rows or columns containing those cells; you can also select multiple rows or columns via row numbers or column headers. A confirmation dialog appears showing the number of items to be deleted, with “Cancel” selected by default.
+
+![Data table and chart selection](docs/screenshots/10-data.png)
+
+**Step 3: Learn data formats through examples.** After selecting a chart type, click “Load example”; the program fills in sample data and selects the corresponding horizontal axis column and value series. Click “Chart guide...” to view the purpose of the chart type and how to organize data. Complete programs for the table below can be loaded via “Open code...”, or download the [table-examples.xlsx](docs/examples/table-examples.xlsx) to prepare your own data.
+
+| Type | How to choose horizontal axis and series | Directly openable complete program | Sample data |
+| --- | --- | --- | --- |
+| Line Chart | Horizontal axis: year/time; each value series becomes a line | [data_line.py](docs/examples/data_line.py) | [line.csv](docs/examples/line.csv) |
+| Bar Chart | Horizontal axis: categories; multiple value series allowed | [data_bar.py](docs/examples/data_bar.py) | [bar.csv](docs/examples/bar.csv) |
+| Horizontal Bar Chart | Select category column for horizontal axis; multiple value series allowed; categories appear on vertical axis | [data_barh.py](docs/examples/data_barh.py) | [barh.csv](docs/examples/barh.csv) |
+| Box Plot | Input raw observations; rows with the same category column value form a group | [data_box.py](docs/examples/data_box.py) | [box.csv](docs/examples/box.csv) |
+| Pie Chart | Horizontal axis: sector names; select exactly one non-negative value series; sum must be greater than zero | [data_pie.py](docs/examples/data_pie.py) | [pie.csv](docs/examples/pie.csv) |
+| Histogram | Select raw numeric column(s); set number of bins; no horizontal axis needed | [data_hist.py](docs/examples/data_hist.py) | [hist.csv](docs/examples/hist.csv) |
+| Scatter Plot | Both horizontal axis and series select numeric columns | [data_scatter.py](docs/examples/data_scatter.py) | [scatter.csv](docs/examples/scatter.csv) |
+
+**Pie chart example.** The `Category` column contains categories like Materials, Labor, etc.; the `Amount` column contains corresponding values. In the horizontal axis column options, select `Category`; for value series, select only `Amount`. Each row corresponds to a sector; percentage text inside sectors automatically uses black or white based on background lightness.
+
+![Pie chart](docs/screenshots/data_pie-plot.png)
+
+**Box plot example.** Each row contains a single raw observation; no pre-averaging is needed. The `Group` column (Control, Treatment) is used for grouping; `A` and `B` are two value series. The box represents the interquartile range (25th to 75th percentile), the midline is the median, and outliers are shown individually.
+
+![Box plot](docs/screenshots/data_box-plot.png)
+
+**Histogram example.** Select the `Score` column as the value series; the program divides scores into several bins and counts the number of data points in each bin. The example defaults to 6 bins (“Histogram bins” = 6). Adjust the bin count to observe data distribution under different interval divisions.
+
+![Histogram](docs/screenshots/data_hist-plot.png)
+
+Other common charts:
+
+![Line chart](docs/screenshots/data_line-plot.png)
+
+![Bar chart](docs/screenshots/data_bar-plot.png)
+
+![Horizontal bar chart](docs/screenshots/data_barh-plot.png)
+
+![Scatter plot](docs/screenshots/data_scatter-plot.png)
+
+**Step 4: Adjust styles and generate plot.** Click “Plot Style Settings...” to adjust title, font size, colors, axis labels, text rotation angle, and legend, then click “Plot...”. For pie charts, the style selection list is generated based on sector names; for other chart types, it is based on the selected value series.
+
+### 3.7 Advanced Settings and Chinese/English Interface
+
+If regular settings are insufficient, click “Advanced settings...”, select the desired function from “Common actions”, and click “Insert template”. Templates include adding titles, text annotations, arrows, horizontal or vertical reference lines, setting coordinate ranges, tick intervals, logarithmic axes, external legends, axis labels, background colors, and saving SVG, PNG, PDF images.
+
+![Advanced settings and code templates](docs/screenshots/06-advanced.png)
+
+Supplementary code operates on the current figure via `the_plt` and executes after plotting. The editor supports line numbers, syntax highlighting, word wrap, and **Ctrl+Mouse Wheel** zooming. After modifying template content, click “Check syntax” to verify, then click “OK” to save; click “Cancel” to discard changes. Leave blank if no supplementary operations are needed.
+
+```python
+the_plt.title("Profit comparison", fontsize=14)
+the_plt.savefig(
+    "filename.svg",
+    format="svg",
+    bbox_inches="tight",
+    dpi=300,
+    transparent=False,
+)
+```
+
+In advanced settings, if the save path is just a filename or relative path, the image is saved to the user’s Documents folder; if an absolute path is given, it saves to the specified location. Syntax checking only checks code syntax, does not execute it; supplementary code runs only when “Plot...” is clicked, and runtime errors are reported at that time.
+
+After switching language via the dropdown in the upper-right corner of the main interface, buttons, help text, status prompts, and settings windows use the selected language. Mathematical symbols in the symbol panel remain unchanged.
+
+![English interface](docs/screenshots/11-english.png)
+
+Click “Help” to read documentation containing mathematical formulas, code blocks, settings tables, and operation screenshots. The help page uses HTML formatting; screenshots are installed together with the program in `betu/assets/help` and can be viewed offline.
+
+![Offline help with equations and screenshots](docs/screenshots/13-help.png)
+
+## 4. BeTu Advanced Usage [Calling Plotting Functions in Python]
+
+When importing the package, a quick-start tip is printed listing commonly used functions and how to generate complete examples:
+
+```python
+from betu import *
+make_example('draw_lines')
+```
+
+`make_example` accepts an example name and prints complete, commented code. The example lists symbol definitions, intermediate variables, plotting expressions, parameter assignments, and various style settings, consistent with the code format in the “Status / Executable Python code” area of the interface. Copy the script into your Python environment to run or edit it.
+
+At the beginning of a Jupyter cell, you can add:
+
+```python
+%config InlineBackend.figure_format = 'retina' # Display high-resolution images in Jupyter
+```
+
+This magic command is for Jupyter only; do not write it into ordinary `.py` files. You can also save SVG or PDF vector graphics for paper layout.
+
+If Jupyter is installed, open [BeTu-Jupyter.ipynb](docs/examples/BeTu-Jupyter.ipynb) and run cells sequentially. This notebook uses the four-mode profit expressions and fixed parameters from Section 3.4, along with the analysis ranges for `alpha` and `b`, and retains the output for reference. Jupyter is an optional environment; using the BeTu interface does not require it.
+
+Quick-start tip upon import and high-DPI display settings:
+
+![Importing BeTu and enabling high-resolution Jupyter output](docs/screenshots/14-jupyter-setup.png)
+
+Plotting code and actual cell output:
+
+![Jupyter plotting code and output](docs/screenshots/15-jupyter-plot.png)
+
+### 4.1 Plotting Curves from Data [data_lines function]
+
+`data` is provided as a dictionary: keys are curve names, values are numeric lists for that curve. All lists must have the same length, and the horizontal axis label list `label_x` must also match in length.
+
+```python
+from betu import *
+data = {'A': [10, 13, 16], 'B': [12, 14, 15]}
+label_x = ['2024', '2025', '2026']
+the_plt = data_lines(data=data, label_x=label_x, x_name='Year', y_name='Value')
+the_plt.show()
+```
+
+Use `make_example('data_lines')` to generate a complete example with all style parameters, or run [data_lines.py](docs/examples/data_lines.py) directly.
+
+![Curves plotted from data](docs/screenshots/data_lines-plot.png)
+
+### 4.2 Plotting Expression Curves via Numerical Simulation [draw_lines function]
+
+`draw_lines` varies one parameter over a given range and computes the results of each expression. Intermediate variables defined with `:=` in the interface are converted to standard `=` assignments when saved as Python code. The `p_n` below is an intermediate variable computed from existing symbols and does not need to be listed in symbol definitions:
+
+```python
+from betu import *
+# Define symbols, including integration variable t
+a, t, x, y = symbols('a, t, x, y')
+# Intermediate variable
+p_n = a + x
+# Plotting expressions
+expressions = {'A': (a-x)**2+y, 'B': integrate(p_n*t, (t, 0, y))}
+# Fixed parameters and analysis range
+assigns = {a: 2, y: 0.5}
+the_var = x
+ranges = [0, 2, 0.02]
+# Legend passed directly as plotting parameters
+legend_options = dict(ncol=1, loc='best', borderpad=0.2,
+                      labelspacing=0.2, handlelength=1.5, handletextpad=0.2,
+                      columnspacing=0.3, fontsize=14)
+the_plt = draw_lines(expressions=expressions, assigns=assigns,
+                     the_var=the_var, ranges=ranges, legend_options=legend_options)
+the_plt.show()
+```
+
+Complete example: `make_example('draw_lines')`, or open [draw_lines.py.](docs/examples/draw_lines.py.)
+
+![Formula curves](docs/screenshots/draw_lines-plot.png)
+
+### 4.3 Simultaneously Analyzing Two Parameters, Plotting 3D Surfaces [draw_3D function]
+
+Specify two analysis parameters via `the_var_x` and `the_var_y`, and their ranges via `start_end_x` and `start_end_y`. `precision` controls sampling resolution; `elevation` and `azimuth` control viewing angle; `colors` and `linestyles` set surface colors and line styles in the order of expressions.
+
+A complete example can be generated with `make_example('draw_3D')` or run [draw_3D.py](docs/examples/draw_3D.py) directly. The example uses default surface colors, opacity, and line settings; `edgecolor=None` means no surface mesh lines.
+
+![3D surfaces](docs/screenshots/draw_3D-plot.png)
+
+### 4.4 Comparing Maximum Value Regions Among Modes [draw_max_area function]
+
+`draw_max_area` evaluates all expressions at each parameter combination and marks the region corresponding to the mode with the maximum value. `texts` customizes region names; `colors` and `patterns` set fill colors and textures; `text_fsize_add` sets the increment of region label font size relative to the global font size (negative values shrink the font).
+
+A complete example can be generated with `make_example('draw_max_area')` or run [draw_max_area.py.](docs/examples/draw_max_area.py.) Legend is off by default (`show_legend=False`); set to `True` to display. Default `dropout=0.001` ignores independent blocks smaller than 0.1% of the total plotting area; set to `0` to disable filtering (see Section 3.3).
+
+### 4.5 Displaying Order Relations Within Regions [draw_detail_area function]
+
+`draw_detail_area` partitions regions according to the order of expression values. `prefix` sets the prefix for region numbers; `numbers` can be `roman`, `letter`, or `number`, using Roman numerals, uppercase English letters, or Arabic numerals respectively.
+
+Default `dropout=0.001` ignores blocks smaller than 0.1% of the total plotting area; set to `0` to retain all blocks. Region colors and fill textures are applied in the order of the actual generated regions after filtering.
+
+A complete example can be generated with `make_example('draw_detail_area')` or run [draw_detail_area.py.](docs/examples/draw_detail_area.py.) Set `loc='outside right'` in `legend_options` to place the legend outside on the right.
+
+![Region relationship plot](docs/screenshots/draw_detail_area-plot.png)
+
+### 4.6 Table Plotting and Python Extension [plot_table function]
+
+```python
+from betu import *
+data = {'Category': ['A', 'B', 'C'], 'Amount': [40, 35, 25]}
+the_plt = plot_table(data=data, x='Category', series=['Amount'], kind='pie')
+the_plt = plot_context(the_plt)
+the_plt.title('Composition')
+the_plt.show()
+```
+
+`plot_context` reserves height for the title and makes relative image paths start from the Documents folder. Use `make_example('plot_table')` to generate a complete table plotting example; use `make_example('data_pie')`, `make_example('data_box')`, `make_example('data_hist')`, etc. for specific chart types.
+
+Reading Excel and plotting:
+
+```python
+from betu import *
+headers, rows = read_table('table-examples.xlsx', sheet='pie')
+data = {name: [row[i] for row in rows] for i, name in enumerate(headers)}
+the_plt = plot_table(data=data, x='Category', series=['Amount'], kind='pie')
+the_plt.show()
+```
+
+`kind` specifies the chart type: `line`, `bar`, `barh`, `box`, `pie`, `hist`, or `scatter`, corresponding to line chart, bar chart, horizontal bar chart, box plot, pie chart, histogram, and scatter plot respectively. Data requirements for each type are described in Section 3.6.
+
+## Appendices
+
+### A. Appendix A: Tips for Using LaTeX
+
+Use `_` for subscripts, `^` for superscripts; precede Greek letter names with `\`; enclose multi-character subscripts/superscripts in `{}`. Enclose the entire name in `$` when displaying as a mathematical formula.
+
+| Desired Display | Legend/Axis Label Writing |
+| --- | --- |
+| Subscript | `$p_n$` |
+| Superscript and subscript | `$\pi_M^{NN}$` |
+| Greek letters | `$\alpha$`, `$\delta$` |
+| Fraction | `$\frac{a}{b}$` |
+
+LaTeX is used for display names; calculations still use Python syntax. For example, the name can be `$x^2$`, but the calculation must be written as `x**2`.
+
+### B. Appendix B: Representing Colors
+
+Colors can be written as names (e.g., `blue`, `teal`) or hexadecimal values (e.g., `#336699`). In the interface, you can select from a dropdown list with color swatches or click “Choose Color...” to open a palette; no need to memorize values.
+
+![Color examples](docs/screenshots/colors.png)
+
+### C. Appendix C: Representing Line Styles
+
+`solid` for solid line, `dashed` for dashed line, `dotted` for dotted line, `dashdot` for dash-dot line. The interface provides a dropdown with preview symbols.
+
+![Line styles](docs/screenshots/lines.png)
+
+### D. Appendix D: Representing Area Fill Patterns
+
+`patterns` specifies fill patterns for each region as a list, which can include `None`, `'/'`, `'\\'`, `'x'`, `'-'`, `'+'`, `'o'`, `'.'`, `'*'`, etc. `None` means no pattern; repeating characters generally increase pattern density. In Python strings, a single backslash must be written as two backslashes, i.e., `'\\'`.
+
+![Region fill patterns](docs/screenshots/patterns.png)
+
+### E. Appendix E: Marker Shapes
+
+Common markers include: `o` (circle), `s` (square), `*` (star), `P` (filled plus), `X` (filled X), `D` (diamond), and `v` (downward triangle). `None` means no marker. You can set marker shape and size individually for each curve in the interface.
+
+![Marker shapes](docs/screenshots/markers.png)
+
+### F. Appendix F: 3D View Angles
+
+`elevation` is the viewing angle above the horizontal plane; `azimuth` is the rotation angle around the vertical axis; `roll` is the rotation of the image around the line of sight. These three parameters together determine the viewing perspective of the 3D plot and can be adjusted in “Plot Style Settings → Axes and More”. Default values are 15°, 45°, and 0° respectively.
+
+![3D surfaces](docs/screenshots/draw_3D-plot.png)

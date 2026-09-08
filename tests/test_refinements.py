@@ -103,18 +103,20 @@ def test_save_edit_and_wrap(window, index, tmp_path, monkeypatch):
     page.save_code()
     assert page.code_path == path
     assert H.tr("save_update") == page.save_button.text()
-    page.edit_code.setChecked(True)
-    code = page.output.toPlainText() + "\n# edited\n"
-    page.output.setPlainText(code)
+    assert not hasattr(page, "edit_code")
+    assert page.output.isReadOnly()
+    page.parameters["fsize"] = 18
+    code = page.compile_code()
     window.show()
     window.activateWindow()
     page.output.setFocus()
     W.QApplication.processEvents()
+    QtTest.QTest.keyClicks(page.output, "unwanted edit")
+    assert page.output.toPlainText() == code
     QtTest.QTest.keyClick(page.output, C.Qt.Key_S, C.Qt.ControlModifier)
     W.QApplication.processEvents()
     assert path.read_text(encoding="utf-8") == code
     assert len(calls) == 1
-    page.edit_code.setChecked(False)
     assert page.output.isReadOnly()
     assert page.code_path == path
     page.load_example(confirm=False)
@@ -124,16 +126,12 @@ def test_save_edit_and_wrap(window, index, tmp_path, monkeypatch):
 def test_existing_file_restores_controls(window, tmp_path, monkeypatch):
     page = window.pages[0]
     source = tmp_path / "opened.py"
-    source.write_text(H.example_code("draw_lines"), encoding="utf-8")
+    source.write_text(H.example_code("draw_lines").replace("fsize = 14", "fsize = 18"), encoding="utf-8")
     monkeypatch.setattr(W.QFileDialog, "getOpenFileName", lambda *a: (str(source), ""))
     page.open_code()
     assert page.code_path == source
-    page.edit_code.setChecked(True)
-    page.output.setPlainText(
-        page.output.toPlainText().replace("fsize = 14", "fsize = 18")
-    )
-    page.edit_code.setChecked(False)
     assert page.parameters["fsize"] == 18
+    assert page.output.isReadOnly()
     page.save_code()
     assert "fsize = 18" in source.read_text(encoding="utf-8")
 
@@ -311,12 +309,16 @@ def test_region_examples_at_default_precision(name):
     for item in ax.get_legend().get_texts():
         assert item.get_text().startswith("Region ")
         assert ": $" in item.get_text()
-    assert all(t.get_text().startswith("Region ") for t, *_ in ax._betu_regions)
+    assert [t.get_text() for t, *_ in ax._betu_regions] == [
+        "Region " + number for number in ("I", "II", "III", "IV", "V", "VI")
+    ]
     arrows = getattr(ax, "_betu_callouts", [])
     if name == "draw_detail_area":
-        assert len(arrows) == 2
         expected_positions = {"Region II": (0.753, 0.049), "Region III": (0.725, 0.054)}
-        for arrow in arrows:
+        manual_arrows = [arrow for arrow in arrows if arrow.get_text() in expected_positions]
+        assert len(arrows) == 2
+        assert len(manual_arrows) == 2
+        for arrow in manual_arrows:
             assert not arrow._betu_external
             assert np.allclose(
                 arrow.get_position(), expected_positions[arrow.get_text()], atol=0.001
@@ -329,7 +331,7 @@ def test_region_examples_at_default_precision(name):
         assert parameters["the_var_y"] == "b"
         assert parameters["start_end_y"] == [0, 0.08]
     else:
-        assert 1 <= len(arrows) <= 4
+        assert 1 <= len(arrows) <= 6
     assert fig.get_figheight() < 10
     plt.close("all")
 

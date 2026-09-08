@@ -195,7 +195,7 @@ class ValueField(W.QWidget):
             )
         raw = self.field.text().strip()
         if self.name in ("title", "x_name", "y_name", "z_name", "save_dir", "prefix"):
-            return raw if raw or self.name == "title" else None
+            return raw if raw or self.name in ("title", "prefix") else None
         if self.name in ("xlabelsize", "ylabelsize", "zlabelsize"):
             if raw == "auto":
                 return raw
@@ -214,10 +214,12 @@ class StyleDialog(Dialog):
         super().__init__(parent, "style")
         self.resize(760, 600)
         self.values = deepcopy(values)
+        if function == "draw_detail_area":
+            self.values.pop("texts", None)
         self.names = list(names)
         self.function, self.kind = function, kind
         defaults = H.default_parameters(function)
-        self.defaults = {k: deepcopy(defaults.get(k, v)) for k, v in values.items()}
+        self.defaults = {k: deepcopy(defaults.get(k, v)) for k, v in self.values.items()}
         layout = W.QVBoxLayout(self)
         self.tabs = W.QTabWidget()
         layout.addWidget(self.tabs, 1)
@@ -335,19 +337,23 @@ class StyleDialog(Dialog):
 
     def item_value(self, key, index):
         values = self.values[key]
+        if key == "texts":
+            return (values[index] or "") if values and index < len(values) else ""
         if key == "pattern_colors" and values == "auto":
             return "auto"
         if key == "pattern_moves" and values == "auto":
             return [0, 0]
         if not values:
-            return self.names[index] if key == "texts" else None
+            return None
         return values[index % len(values)]
 
     def series_field(self, key, value):
         if key in ("linewidth", "markersize", "pattern_colors", "pattern_moves"):
             return ValueField(key, value)
         if key == "texts":
-            return W.QLineEdit(str(value))
+            field = W.QLineEdit(value or "")
+            field.setPlaceholderText(H.tr("region_text_hint"))
+            return field
         if key == "colors":
             row = W.QWidget()
             layout = W.QHBoxLayout(row)
@@ -384,13 +390,31 @@ class StyleDialog(Dialog):
                     self.marker_icon(data), H.label(H.MARKER_NAMES[data]), data
                 )
         elif key == "patterns":
+            field.setIconSize(C.QSize(56, 26))
+            for pair, data in H.STYLE_PATTERN_CHOICES:
+                field.addItem(self.pattern_icon(data), H.label(pair), data)
             for data in self.values[key]:
                 if field.findData(data) < 0:
-                    field.addItem(H.tr("none_option") if data is None else data, data)
+                    field.addItem(self.pattern_icon(data), H.tr("pattern_custom", pattern=data), data)
         if field.findData(value) < 0:
             field.addItem(str(value), value)
         field.setCurrentIndex(max(0, field.findData(value)))
         return field
+
+    def pattern_icon(self, pattern):
+        from matplotlib.figure import Figure
+        from matplotlib.backends.backend_agg import FigureCanvasAgg
+        from matplotlib.patches import Rectangle
+
+        fig = Figure(figsize=(0.56, 0.26), dpi=100, facecolor="none")
+        fig.add_artist(Rectangle((0.02, 0.04), 0.96, 0.92, transform=fig.transFigure,
+                                 facecolor="#eef3f7", edgecolor="#344655",
+                                 linewidth=0.7, hatch=pattern))
+        canvas = FigureCanvasAgg(fig)
+        canvas.draw()
+        pixels = canvas.buffer_rgba()
+        picture = G.QImage(pixels, 56, 26, 56 * 4, G.QImage.Format_RGBA8888).copy()
+        return G.QIcon(G.QPixmap.fromImage(picture))
 
     def line_icon(self, style):
         pixmap = G.QPixmap(48, 22)
@@ -484,16 +508,17 @@ class StyleDialog(Dialog):
                 value = field.currentData()
             else:
                 value = field.text()
+            if key == "texts":
+                value = value.strip()
             if value == self.item_value(key, self.series_index):
                 continue
-            values = (
-                [self.item_value(key, i) for i in range(len(self.names))]
-                if self.values[key] == "auto"
-                else list(self.values[key] or self.names)
-            )
-            while len(values) < len(self.names):
-                values.extend(values[: len(self.names) - len(values)])
+            count = max(len(self.names), len(self.values[key]) if isinstance(self.values[key], list) else 0)
+            values = [self.item_value(key, i) for i in range(count)]
             values[self.series_index] = value
+            if key == "texts":
+                values = [text or None for text in values]
+                if not any(values):
+                    values = None
             changes[key] = values
         self.values.update(changes)
 

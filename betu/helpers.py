@@ -5,21 +5,8 @@ LANGUAGE = "zh"
 # 编辑器工具条、文件保存和参数切换的界面文案。
 EDITOR_TEXT = {
     "wrap": ("自动换行", "Word wrap"),
-    "edit_code": ("编辑代码", "Edit code"),
-    "edit_code_hint": (
-        "勾选后，出图、复制和保存使用下方编辑的代码；取消勾选会按代码恢复界面控件。",
-        "When checked, Plot, Copy and Save use the code below. Uncheck to restore the controls from your code.",
-    ),
     "save_new": ("保存代码(&S)...", "Save Code (&S)..."),
     "save_update": ("更新代码(&S)", "Update Code (&S)"),
-    "manual_code": (
-        "代码编辑已解锁；Ctrl+S 保存当前代码。",
-        "Code editing unlocked. Ctrl+S saves the current code.",
-    ),
-    "code_locked": (
-        "代码已锁定，界面控件已同步。",
-        "Code locked; controls synchronized.",
-    ),
     "invalid_assignments": (
         "参数赋值请写成 a=2, b=0.5，每项用逗号或换行分隔。",
         "Use a=2, b=0.5, separated by commas or new lines.",
@@ -52,6 +39,12 @@ EDITOR_TEXT = {
         "转换后请核对变量、上下标、乘方和积分上下限。",
         "Check variables, subscripts, powers and integration limits after conversion.",
     ),
+    # 表达式转换窗口：输入校验与括号匹配错误。
+    "conversion_empty": ("请输入要转换的表达式。", "Enter an expression to convert."),
+    "conversion_brackets": ("括号不匹配，请检查输入表达式。", "Unmatched brackets. Check the input expression."),
+    "conversion_fraction": ("分式需要完整的分子和分母花括号。", "A fraction needs a numerator and denominator, each enclosed in braces."),
+    "conversion_nthroot": ("nthroot 需要两个参数：nthroot(表达式, 根指数)。", "nthroot requires two arguments: nthroot(expression, root index)."),
+    "conversion_mode": ("请选择表达式来源。", "Select an expression source."),
     "smart_labels": (
         "小区域标记自动避让与引导线",
         "Avoid small-region label overlap with leader arrows",
@@ -60,13 +53,13 @@ EDITOR_TEXT = {
 # 主窗口、标签页、菜单、按钮与状态栏。
 TEXT = {
     "title": (
-        "彼图 BeTu 1.0.0 · 科研仿真与 Excel 数据绘图",
-        "BeTu 1.0.0 · Scientific Simulation & Excel Plotting",
+        "彼图 BeTu 1.0.1 · 科研仿真与 Excel 数据绘图",
+        "BeTu 1.0.1 · Scientific Simulation & Excel Plotting",
     ),
     "about": ("关于...", "About..."),
     "author": (
-        "作者：田雨鑫｜东北大学 博士｜tianyuxin@mail.neu.edu.cn",
-        "Yu-Xin Tian, PhD | Northeastern University | tianyuxin@mail.neu.edu.cn",
+        "作者：田雨鑫（Jesse）｜东北大学 博士｜tianyuxin@mail.neu.edu.cn",
+        "Yu-Xin (Jesse) Tian, PhD | Northeastern University | tianyuxin@mail.neu.edu.cn",
     ),
     "brand": ("彼图 BeTu", "BeTu"),
     "slogan": ("Be better tool for U!", "Be better tool for U!"),
@@ -81,8 +74,8 @@ TEXT = {
         ],
     ),
     "recognize": ("公式识别", "Recognize formulas"),
-    "symbols": ("Ω...", "Ω..."),
-    "latex": ("LaTex转换...", "LaTeX conversion..."),
+    "symbols": ("符号面板 Ω...", "Symbol Panel Ω..."),
+    "latex": ("表达式转换...", "Expression conversion..."),
     "clear": ("清空", "Clear"),
     "example": ("加载案例", "Load example"),
     "help": ("使用帮助", "Help"),
@@ -142,6 +135,9 @@ TEXT = {
     "kind": ("图形类型", "Chart type"),
     "x_column": ("横轴/分类列", "X / category column"),
     "series": ("系列（可多选）", "Series (multiple selection)"),
+    # 数据到绘图：系列列表右上方的批量选择按钮。
+    "series_all": ("全选", "Select all"),
+    "series_none": ("全不选", "Deselect all"),
     "row_numbers": ("使用行号", "Use row numbers"),
     "bins": ("直方图分箱数", "Histogram bins"),
     "table_hint": (
@@ -191,16 +187,12 @@ TEXT = {
     "convert": ("转换", "Convert"),
     "copy": ("复制结果", "Copy result"),
     "latex_input": (
-        "输入公式右侧的 LaTeX / Matlab 文本",
-        "Enter LaTeX / Matlab for the right-hand expression",
+        "输入公式右侧的 LaTeX 或 MATLAB 代码",
+        "Enter the right-hand expression as LaTeX or MATLAB code",
     ),
     "latex_output": (
         "标准 SymPy 表达式（**、lamda）",
         "Standard SymPy expression (**, lamda)",
-    ),
-    "latex_modes": (
-        ["通用 LaTeX", "Mathematica LaTeX", "Matlab"],
-        ["General LaTeX", "Mathematica LaTeX", "Matlab"],
     ),
     "overwrite": (
         "加载案例会替换本页内容，是否继续？",
@@ -250,10 +242,15 @@ TEXT.update(EDITOR_TEXT)
 
 # 公式转换窗口：列表显示顺序、内部模式值与说明。
 CONVERSION_MODES = [
-    (("Mathematica", "Mathematica"), 1, "latex_hint_mathematica"),
-    (("MATLAB", "MATLAB"), 2, "latex_hint_matlab"),
+    (("从 Mathematica 复制的 LaTeX", "LaTeX copied from Mathematica"), 1, "latex_hint_mathematica"),
+    (("MATLAB 代码", "MATLAB code"), 2, "latex_hint_matlab"),
     (("通用 LaTeX", "General LaTeX"), 0, "latex_hint_general"),
 ]
+# 通用 LaTeX 解析结果：转换为包中已导出的计算函数。
+CONVERSION_FUNCTION_ALIASES = {
+    "Integral": "integrate", "Derivative": "diff", "Sum": "summation",
+    "Product": "product", "Limit": "limit",
+}
 
 # 标记形状下拉列表：名称；内部仍传 Matplotlib 标记值。
 MARKER_NAMES = {
@@ -942,9 +939,10 @@ REGION_EXAMPLES = {
 HELP_HTML = (
     r"""
 <h1>彼图 BeTu 使用帮助</h1>
-<p>作者：田雨鑫｜东北大学｜博士｜tianyuxin@mail.neu.edu.cn</p>
+<p>作者：田雨鑫（Jesse）｜东北大学｜博士｜tianyuxin@mail.neu.edu.cn</p>
 <p>彼图支持根据公式进行数值仿真，也支持从 Excel 或数据表直接绘图。第一次使用时，可在相应标签页点击“加载案例”，再点击“出图...”查看结果。</p>
 <p>公式绘图的基本顺序是：<b>输入表达式 → 公式识别 → 设置分析参数、范围和固定值 → 调整绘图风格 → 出图</b>。数据表绘图的方法见第 5 节。</p>
+<p><img src="help/01-main.png" width="760" alt="彼图主界面与五个绘图标签页"></p>
 <h2>1. 输入表达式和中间变量</h2>
 <p>每行输入一个绘图表达式，格式为 <code>名称 = 表达式</code>。左侧名称用于标识曲线或模式，可使用由 <code>$</code> 包裹的 LaTeX；右侧计算式使用 Python 语法，乘法写成 <code>*</code>，乘方写成 <code>**</code>。</p>
 <pre>$p_a$ = 2*a*x + b*x**2
@@ -957,9 +955,9 @@ $\pi_R$ = integrate(p_n*t+b-3*t**2, (t, p_n-c, p_n+a*b))</pre>
 <p>中间变量可定义在绘图表达式之前或之后，名称只能包含大小写字母、下划线和数字，且不能以数字开头，例如 <code>p_n</code>。中间变量和绘图表达式左侧的名称不会列入生成代码的 <code>symbols</code> 符号定义。积分变量会列入符号定义，<code>integrate</code>、<code>sin</code> 等函数名称则不会被当成待赋值参数。</p>
 <p>中间变量支持重复赋值，也支持对数组、列表或元组等对象进行索引。普通的 <code>integrate(...)</code> 通常返回一个表达式，不能直接在后面添加 <code>[0]</code>；使用索引前，请确认结果支持按位置取值。</p>
 <p>点击“Ω...”可打开符号面板，选择符号后会插入对应的 Python 写法。面板保持在主窗口上方，打开时仍可继续编辑表达式；插入符号名称时会自动补充必要的空格。</p>
-<p>已有公式可通过“LaTex转换...”转换。来源列表依次为 Mathematica、MATLAB、通用 LaTeX，选择后会显示相应提示。在 Mathematica 中，选中公式后右键选择“复制为 → LaTeX”；在 MATLAB 中，复制赋值语句右侧的表达式。将内容粘贴到转换窗口，点击“转换”后即可复制结果。</p>
+<p>已有公式可通过“表达式转换...”转换。来源列表依次为 Mathematica、MATLAB、通用 LaTeX，选择后会显示相应提示。在 Mathematica 中，选中公式后右键选择“复制为 → LaTeX”；在 MATLAB 中，复制赋值语句右侧的表达式。将内容粘贴到转换窗口，点击“转换”后即可复制结果。</p>
 <p>转换结果使用 <code>**</code> 表示乘方，并将变量 <code>lambda</code> 写成 <code>lamda</code>，以符合 Python 和 SymPy 的语法要求。不同来源的 LaTeX 可能存在不规范写法或歧义，转换无法保证完全准确；使用前请核对变量、上下标、乘方和积分上下限。</p>
-<p><img src="help/04-latex.png" width="640" alt="LaTeX 转换窗口"></p>
+<p><img src="help/04-latex.png" width="640" alt="表达式转换窗口"></p>
 <h2>2. 选择分析参数</h2>
 <p>输入表达式后，点击“公式识别”。“公式到曲线”需要选择一个横轴分析参数；“模式比较”“关系区域比较”和“公式到三维图”需要为横轴、纵轴选择两个不同的参数。分别填写范围的“开始”值和“结束”值。单参数曲线的步长会根据范围自动计算，也可手动调整。</p>
 <p>在“参数赋值”中填写其余参数的固定值，各项用逗号或换行分隔，例如：</p>
@@ -981,10 +979,12 @@ $\pi_R$ = integrate(p_n*t+b-3*t**2, (t, p_n-c, p_n+a*b))</pre>
 <tr><td>图例设置</td><td>图例的显示开关、位置、列数、字号和间距。默认显示为 1 列。</td></tr>
 <tr><td>坐标与其他设置</td><td>坐标范围、文字间距、采样精度、小区域过滤、三维视角和图片保存位置等，具体选项随图形类型变化。</td></tr>
 </table>
-<p>颜色列表提供色块，线型列表提供线条预览，标记列表提供形状图标和名称。选择一条曲线或一个区域后，可以单独修改其样式；切换选择时，已做的修改会保留。</p>
+<p>颜色列表提供色块，线型列表提供线条预览，标记列表提供形状图标和名称，区域填充纹理列表也提供图案预览。选择一条曲线或一个区域后，可以单独修改其样式；切换选择时，已做的修改会保留。</p>
 <p><img src="help/05-style-series.png" width="600" alt="逐条设置曲线或区域的样式"></p>
 <p>所有标签页都可通过“显示图例”控制图例是否显示。模式比较默认关闭图例，关系区域比较默认将图例放在图外右侧。模式比较、关系区域比较和三维图不显示坐标背景网格。</p>
 <p>模式比较和关系区域比较的样式列表使用“区域 1、区域 2……”编号。模式比较的顺序与绘图表达式一致；关系区域比较的列表则根据实际出图结果更新。</p>
+<p>“模式比较”的“区域文字标注”默认留空，对应 <code>texts=None</code>，此时使用表达式名标注。可单独填写某一区域的标注，其余空白项仍使用默认标注；清空全部标注后恢复 <code>texts=None</code>。</p>
+<p>“关系区域比较”的图内标注由“坐标与其他设置”中的“区域标注前缀”和“区域编号格式”共同确定，不提供逐区域文字输入框。例如，前缀为 <code>Region</code>、编号为罗马数字时，显示 <code>Region I、Region II……</code>；改为字母时，显示 <code>Region A、Region B……</code>。图外图例使用相同的区域名称，并列出对应的完整大小关系。</p>
 <p><b>过滤细碎区域：</b>在“坐标与其他设置”中调整“忽略小区域（面积比例）”，对应的代码参数为 <code>dropout</code>。模式比较和关系区域比较均默认使用 <code>0.001</code>，即忽略面积小于整个绘图区 0.1% 的独立分块；设为 <code>0.01</code> 表示 1%，设为 <code>0</code> 则关闭过滤。</p>
 <p>面积比例按采样网格估算，每个分块分别判断。低于阈值的分块不显示填色、边界、标签或引导线，其余分块正常保留。同一模式分布在多个互不相连的区域时，符合阈值的分块会分别标注，图例中只保留一项。<code>dropout</code> 越大，被隐藏的区域越多。</p>
 <p><b>安排标签位置：</b>对保留的区域，程序会先尝试在区域内放置文字；如果空间不足，就将标签移到图外并添加箭头。手动将标签移出所属区域时，也会用箭头标明对应关系。可在“坐标与其他设置”中关闭自动避让，或在区域样式中调整标签的位置偏移。</p>
@@ -1000,17 +1000,18 @@ the_plt.savefig("figure.svg", format="svg",
 <h2>5. Excel 和数据表</h2>
 <p><b>导入数据：</b>在“数据到绘图”中点击“导入Excel/CSV...”并选择文件，或先从 Excel 复制数据，再点击“粘贴数据”。程序会打开导入预览，并自动判断首行是否为列名。</p>
 <p>如果首行是表头，请勾选“首行是列名”；如果首行已经是数据，请取消勾选，程序会保留这一行并自动生成列名。自动判断可能有误，请核对预览和数据行数，再点击“导入数据”。点击“取消”则保留当前表格。</p>
-<p><b>选择绘图内容：</b>选择图形类型，再选择横轴列和数值系列。“数值系列”是要绘制的数值列，不能与横轴使用同一列。每种图形都提供“加载案例”和“类型教程”，可先查看示例，再整理自己的数据。</p>
+<p><b>选择绘图内容：</b>选择图形类型，再选择横轴列和数值系列。“数值系列”是要绘制的数值列，不能与横轴使用同一列。每种图形都提供“加载案例”和“图形教程...”，可先查看示例，再整理自己的数据。</p>
+<p>点击系列列表旁的“全选”可选中除当前横轴列外的所有系列；点击“全不选”可清空选择。批量选择后仍可逐项调整。</p>
 <p>饼状图只使用一个非负数值系列，且数值总和必须大于零；箱型图和直方图使用原始观测值，无需预先求平均。直方图无需指定横轴列，可以通过“分箱数”调整区间数量。饼状图扇区内的文字和区域图标签会根据背景深浅自动使用黑色或白色。</p>
 <p><img src="help/10-data.png" width="680" alt="数据表、图形类型和数值系列选择"></p>
 <p><b>编辑表格：</b>直接编辑单元格，双击列标题可修改列名，按住 Ctrl 并滚动鼠标滚轮可缩放表格。在选中的单元格处按 Ctrl+V，会从该位置开始粘贴全部行，不将首行提取为列名。</p>
 <p>选中单元格后点击“删除行”或“删除列”，可删除其所在的整行或整列。删除前会显示待删除数量，并默认选中“取消”；确认后才执行删除。完成数据和样式设置后，点击“出图...”查看结果。</p>
-<h2>6. 编辑、保存与重复使用</h2>
-<p><b>阅读和编辑代码：</b>表达式、运行信息、LaTeX 转换和高级设置中的代码编辑区支持行号、语法高亮、Ctrl+鼠标滚轮缩放和“自动换行”。自动换行只影响显示，不改变代码内容。参数赋值框始终自动换行，不显示行号，也无需单独开启换行。出现语法错误时，程序会提示并标记出错行；底部状态栏显示当前操作状态。</p>
-<p>“运行信息”区域中的代码默认锁定。勾选“编辑代码”后可以直接修改，此时出图、复制和保存都会使用编辑区中的代码。取消勾选后，程序会根据代码更新界面控件；如果无法恢复设置，会保留编辑状态并提示检查。</p>
+<h2>6. 查看、保存与重复使用</h2>
+<p><b>阅读和编辑代码：</b>表达式、运行信息、表达式转换和高级设置中的代码编辑区支持行号、语法高亮、Ctrl+鼠标滚轮缩放和“自动换行”。自动换行只影响显示，不改变代码内容。参数赋值框始终自动换行，不显示行号，也无需单独开启换行。出现语法错误时，程序会提示并标记出错行；底部状态栏显示当前操作状态。</p>
+<p>“运行信息”区域中的代码始终只读，可查看和复制。请通过表达式、参数、绘图风格和高级设置调整绘图内容；出图、复制和保存时，程序会根据当前界面设置重新生成完整代码。</p>
 <p><b>保存和复用代码：</b>按 Ctrl+S 或点击保存按钮即可保存。首次保存时，选择 <code>.py</code> 文件的位置和名称；已打开或保存过的代码会直接更新原文件。按钮会相应显示“保存代码(S)...”或“更新代码(S)”。加载案例后，再次保存时会按新文件处理。</p>
 <p>“打开代码...”可恢复对应标签页中的表达式、中间变量、参数、样式和高级代码。“复制程序代码”可将完整脚本复制到剪贴板，供其他 Python 程序使用。</p>
-<p><img src="help/02-formula.png" width="680" alt="运行信息中的代码编辑与保存"></p>
+<p><img src="help/17-savecode.png" width="680" alt="运行信息中的代码查看与保存"></p>
 <p><b>保存图片：</b>出图后，使用预览窗口的工具栏缩放、平移或保存图片。关闭预览窗口后即可继续操作主界面。代码文件用于继续编辑和重复绘图，图片文件用于展示或论文排版。</p>
 <h2>7. Python 与 Jupyter</h2>
 <p>彼图也可以作为 Python 包使用。导入时会显示快速上手提示，列出常用函数及完整示例的生成方法：</p>
@@ -1027,9 +1028,10 @@ make_example('draw_lines')</pre>
 """,
     r"""
 <h1>BeTu User Guide</h1>
-<p>Yu-Xin Tian, PhD | Northeastern University | tianyuxin@mail.neu.edu.cn</p>
+<p>Yu-Xin (Jesse) Tian, PhD | Northeastern University | tianyuxin@mail.neu.edu.cn</p>
 <p>BeTu supports numerical simulations from formulas and plots from Excel or tabular data. To get started, choose a tab, click “Load example”, then click “Plot...” to see the result.</p>
 <p>For formula plots, follow this sequence: <b>Enter expressions → Recognize formulas → Set analysis parameters, ranges, and fixed values → Adjust plot styles → Plot</b>. For tabular data, see Section 5.</p>
+<p><img src="help/01-main.png" width="760" alt="BeTu main window and five plotting tabs"></p>
 <h2>1. Expressions and intermediate variables</h2>
 <p>Enter one plot expression per line in the form <code>name = expression</code>. The name identifies a curve or mode and may use LaTeX enclosed in <code>$</code>. The expression uses Python syntax: <code>*</code> for multiplication and <code>**</code> for powers.</p>
 <pre>$p_a$ = 2*a*x + b*x**2
@@ -1042,9 +1044,9 @@ $\pi_R$ = integrate(p_n*t+b-3*t**2, (t, p_n-c, p_n+a*b))</pre>
 <p>Define intermediate variables before or after the plot expressions that use them. Their names may contain uppercase and lowercase letters, underscores, and digits, but cannot begin with a digit; <code>p_n</code> is a valid name. Intermediate variables and plot names are excluded from the generated <code>symbols</code> declaration. Integration variables are included, while function names such as <code>integrate</code> and <code>sin</code> are not treated as parameters.</p>
 <p>Intermediate variables support reassignment and indexing of arrays, lists, tuples, and other indexable objects. An ordinary call to <code>integrate(...)</code> usually returns an expression, so you cannot simply append <code>[0]</code>. Check the result type before using an index.</p>
 <p>Click “Ω...” to open the symbol panel, then select a symbol to insert its Python syntax. The panel stays above the main window while allowing you to continue editing. Spaces are added where needed to keep inserted names separate from adjacent variables.</p>
-<p>To convert an existing formula, click “LaTeX conversion...”. The source options are Mathematica, MATLAB, and General LaTeX, each with its own instructions. In Mathematica, select the formula and right-click “Copy As → LaTeX”. In MATLAB, copy the expression on the right side of an assignment. Paste it into the conversion window, convert it, and copy the result.</p>
+<p>To convert an existing formula, click “Expression conversion...”. The source options are Mathematica, MATLAB, and General LaTeX, each with its own instructions. In Mathematica, select the formula and right-click “Copy As → LaTeX”. In MATLAB, copy the expression on the right side of an assignment. Paste it into the conversion window, convert it, and copy the result.</p>
 <p>The output uses <code>**</code> for powers and changes the variable name <code>lambda</code> to <code>lamda</code> to comply with Python and SymPy syntax. LaTeX from different sources may be nonstandard or ambiguous, so conversion is not guaranteed to be fully accurate. Check variables, subscripts, superscripts, powers, and integration limits before using the result.</p>
-<p><img src="help/04-latex.png" width="640" alt="LaTeX conversion window"></p>
+<p><img src="help/04-latex.png" width="640" alt="Expression conversion window"></p>
 <h2>2. Parameters and ranges</h2>
 <p>After entering expressions, click “Recognize formulas”. For “Formula to Curves”, select one X parameter. For “Mode Comparison”, “Region Relationships”, and “Formula to 3D”, select two different parameters for the X and Y axes. Enter each range's start and end values separately. The curve step is calculated from the range and can also be adjusted manually.</p>
 <p>In “Parameter values”, assign fixed values to the remaining parameters, separated by commas or new lines. For example:</p>
@@ -1066,10 +1068,12 @@ $\pi_R$ = integrate(p_n*t+b-3*t**2, (t, p_n-c, p_n+a*b))</pre>
 <tr><td>Legend</td><td>Visibility, position, number of columns, font size, and spacing. The default is one column.</td></tr>
 <tr><td>Axes and More</td><td>Axis limits, text spacing, sampling precision, small-region filtering, 3D view, and image destination. Available options depend on the plot type.</td></tr>
 </table>
-<p>The color list shows swatches, the line-style list shows stroke previews, and the marker list shows shapes and names. Select a curve or region to edit its style. Your changes are retained when you select another item.</p>
+<p>The color list shows swatches, the line-style list shows stroke previews, the marker list shows shapes and names, and the region fill list shows hatch previews. Select a curve or region to edit its style. Your changes are retained when you select another item.</p>
 <p><img src="help/05-style-series.png" width="600" alt="Individual curve and region styles"></p>
 <p>Every tab provides a “Show legend” checkbox. Mode Comparison hides the legend by default; Region Relationships places it outside the plot on the right. Mode, relationship, and 3D plots do not display a background coordinate grid.</p>
 <p>Mode and relationship style lists use “Region 1”, “Region 2”, and so on. Mode regions follow the order of the plot expressions; relationship regions are updated from the actual plot result.</p>
+<p>In Mode Comparison, leave “Region label text” blank to keep <code>texts=None</code> and use expression names. You can customize individual labels while leaving others automatic. Clearing all labels restores <code>texts=None</code>.</p>
+<p>In Region Relationships, labels are generated from “Region label prefix” and “Region numbering format” in “Axes and More”; there is no text field for individual region labels. For example, the prefix <code>Region</code> with Roman numerals gives <code>Region I, Region II, …</code>; letters give <code>Region A, Region B, …</code>. The legend outside the plot uses the same region names followed by the complete ordering of expression values.</p>
 <p><b>Filter small fragments:</b> In “Axes and More”, set “Minimum region area fraction”, corresponding to the Python parameter <code>dropout</code>. Both mode and relationship plots default to <code>0.001</code>, which hides individual components smaller than 0.1% of the full plot area. Use <code>0.01</code> for 1%, or <code>0</code> to disable filtering.</p>
 <p>Area fractions are estimated from the sampling grid, with each disconnected component checked separately. Components below the threshold have no fill, boundary, label, or leader arrow; the rest remain visible. If a mode occupies several disconnected components, each retained component receives a label, with one legend entry for the mode. Higher <code>dropout</code> values hide more regions.</p>
 <p><b>Position labels:</b> For retained regions, the program first tries to place each label inside its region. If it will not fit, the label is moved outside the plot and connected with an arrow. An arrow also appears when you manually offset a label beyond its region. Disable automatic placement in “Axes and More”, or adjust label offsets in the region style settings.</p>
@@ -1086,16 +1090,17 @@ the_plt.savefig("figure.svg", format="svg",
 <p><b>Import data:</b> In “Data to Plots”, click “Import Excel/CSV...” and select a file, or copy cells from Excel and click “Paste data”. An import preview opens and automatically estimates whether the first row contains column names.</p>
 <p>Check “First row contains column names” if the first row is a header. If it contains data, uncheck this option to retain the row and generate column names. Automatic detection can be wrong, so check the preview and data row count before clicking “Import Data”. “Cancel” leaves the current table unchanged.</p>
 <p><b>Choose what to plot:</b> Select a chart type, an X column, and the numeric series to plot. A numeric series is a column of values; it cannot also be the selected X column. Every chart type provides an example and a guide to help you organize your own data.</p>
+<p>Click “Select all” beside the series list to select every series except the current X column. “Deselect all” clears the selection. You can still adjust individual selections afterward.</p>
 <p>Pie charts require exactly one nonnegative numeric series with a positive total. Box plots and histograms use raw observations without averaging them first. Histograms do not require an X column; adjust the bin count to change the number of intervals. Text inside pie slices and region labels automatically uses black or white for contrast.</p>
 <p><img src="help/10-data.png" width="680" alt="Data table, chart type, and numeric series selection"></p>
 <p><b>Edit the table:</b> Edit cells directly, double-click a column heading to rename it, and use Ctrl+mouse wheel to zoom. Pressing Ctrl+V at a selected cell pastes all copied rows from that position without extracting the first row as column names.</p>
 <p>Use “Delete Rows” or “Delete Columns” to remove the entire rows or columns containing selected cells. A confirmation dialog shows how many will be deleted and defaults to “Cancel”. Once your data and styles are ready, click “Plot...” to view the result.</p>
-<h2>6. Editing and saving</h2>
-<p><b>Read and edit code:</b> The formula, output, LaTeX conversion, and advanced editors provide line numbers, syntax highlighting, Ctrl+mouse wheel zoom, and a “Word wrap” option. Wrapping changes the display, not the code. The assignment box always wraps and has no line numbers or wrap switch. Syntax errors identify and highlight the affected line; the status bar shows the current operation.</p>
-<p>Generated code in the output area is locked by default. Check “Edit code” to modify it; plotting, copying, and saving will then use the editor's content. Uncheck the option to update the interface controls from the code. If the settings cannot be restored, editing remains enabled and a message asks you to check the code.</p>
+<h2>6. Viewing, saving, and reusing code</h2>
+<p><b>Read and edit code:</b> The formula, output, expression conversion, and advanced editors provide line numbers, syntax highlighting, Ctrl+mouse wheel zoom, and a “Word wrap” option. Wrapping changes the display, not the code. The assignment box always wraps and has no line numbers or wrap switch. Syntax errors identify and highlight the affected line; the status bar shows the current operation.</p>
+<p>Generated code in the output area is always read-only and can be viewed or copied. Make changes through the formula input, parameter controls, plot styles, and Advanced Settings. Plotting, copying, and saving regenerate the complete script from the current interface settings.</p>
 <p><b>Save and reuse code:</b> Press Ctrl+S or click the save button. When saving for the first time, choose a filename and location for the <code>.py</code> file. Code that has already been opened or saved updates the same file. The button changes between “Save Code (S)...” and “Update Code (S)” accordingly. After loading an example, the next save is treated as a new file.</p>
 <p>“Open code...” restores the corresponding tab's expressions, intermediate variables, parameters, styles, and advanced code. “Copy Python code” copies the complete script to the clipboard for use in another Python program.</p>
-<p><img src="help/02-formula.png" width="680" alt="Editing and saving generated code"></p>
+<p><img src="help/17-savecode.png" width="680" alt="Viewing and saving generated code"></p>
 <p><b>Save images:</b> Use the plot preview toolbar to zoom, pan, or save the image. Close the preview to continue working in the main window. Save code to edit or reproduce a plot later; save an image to share the result or include it in a paper.</p>
 <h2>7. Python and Jupyter</h2>
 <p>BeTu can also be used as a Python package. Importing it displays quick-start tips, common functions, and instructions for generating complete examples:</p>
@@ -1113,8 +1118,8 @@ make_example('draw_lines')</pre>
 )
 HELP_CSS = "body { color:#263445; font-family: sans-serif; font-size:11pt; } h1 { color:#175b88; } h2 { color:#137c98; margin-top:18px; } pre { background-color:#edf3f8; font-family:Consolas,monospace; white-space:pre-wrap; } code { color:#8b3e69; font-family:Consolas,monospace; } th { background-color:#e8f0f6; }"
 ABOUT_HTML = (
-    "<h1>彼图 BeTu</h1><p><b>版本 1.0.0</b></p><p>Be better tool for U!</p><p>科研仿真与 Excel 数据绘图工具</p><p><b>作者：</b>田雨鑫<br><b>单位：</b>东北大学<br><b>学位：</b>博士<br><b>邮箱：</b>tianyuxin@mail.neu.edu.cn</p>",
-    "<h1>BeTu</h1><p><b>Version 1.0.0</b></p><p>Be better tool for U!</p><p>Scientific simulation and Excel data plotting</p><p><b>Author:</b> Yu-Xin Tian<br><b>Affiliation:</b> Northeastern University<br><b>Degree:</b> PhD<br><b>Email:</b> tianyuxin@mail.neu.edu.cn</p>",
+    "<h1>彼图 BeTu</h1><p><b>版本 1.0.1</b></p><p>Be better tool for U!</p><p>科研仿真与 Excel 数据绘图工具</p><p><b>作者：</b>田雨鑫<br><b>单位：</b>东北大学<br><b>学位：</b>博士<br><b>邮箱：</b>tianyuxin@mail.neu.edu.cn</p>",
+    "<h1>BeTu</h1><p><b>Version 1.0.1</b></p><p>Be better tool for U!</p><p>Scientific simulation and Excel data plotting</p><p><b>Author:</b> Yu-Xin Tian<br><b>Affiliation:</b> Northeastern University<br><b>Degree:</b> PhD<br><b>Email:</b> tianyuxin@mail.neu.edu.cn</p>",
 )
 CHART_HELP_TEMPLATE = (
     "<h1>{name}：用途与数据准备</h1><p>{guide}</p><h2>加载并运行案例</h2><p>点击下方的“加载案例”，程序会填入示例数据，并选好横轴列和数值系列。返回主界面后，点击“出图...”查看结果，再按需要修改数据或样式。</p><p>如果使用 Python，可运行以下代码，生成带注释的完整绘图示例：</p><pre>from betu import *\nmake_example('data_{kind}')</pre>",
@@ -1135,6 +1140,8 @@ TEXT.update(
             "Select a series or region, then edit its style. Changes are retained when switching.",
         ),
         "title_hint": ("留空则不显示标题", "Leave blank for no title"),
+        "region_text_hint": ("该值为空，则默认用表达式名标注", "Leave blank to label the region using expression names"),
+        "pattern_custom": ("自定义纹理：{pattern}", "Custom hatch: {pattern}"),
         "figure_width": ("图片宽度（英寸）", "Width (inches)"),
         "figure_height": ("图片高度（英寸）", "Height (inches)"),
         "series_number": ("第 {number} 条", "Series {number}"),
@@ -1206,11 +1213,40 @@ PARAMETER_COMMENTS.update(
     pattern_colors="区域标签背景颜色",
     switchcolor="区域文字黑白切换阈值",
 )
+# 绘图风格设置 → 曲线／区域样式：填充纹理名称与 Matplotlib 编码。
+STYLE_PATTERN_CHOICES = [
+    (("无纹理", "No hatch"), None),
+    (("斜线 /", "Diagonal /"), "/"),
+    (("反斜线 \\", "Back diagonal \\"), "\\"),
+    (("竖线 |", "Vertical |"), "|"),
+    (("横线 -", "Horizontal -"), "-"),
+    (("网格 +", "Grid +"), "+"),
+    (("交叉斜线 x", "Crossed diagonals x"), "x"),
+    (("小圆 o", "Small circles o"), "o"),
+    (("大圆 O", "Large circles O"), "O"),
+    (("圆点 .", "Dots ."), "."),
+    (("星形 *", "Stars *"), "*"),
+]
+PARAMETER_ENGLISH.update(texts="Region label text", patterns="Region fill pattern",
+                         pattern_moves="Region label offset", pattern_colors="Region label background color")
+PARAMETER_ENGLISH.update(
+    linestyles="Line style", linewidth="Line width", linewidths="Region border width",
+    markers="Marker shape", markersize="Marker size", colors="Color",
+    save_dir="Save image automatically", precision="Samples per axis",
+    density="Surface mesh density", color_alpha="Surface opacity (0–1)",
+    edgecolor="Surface mesh color", x_lim="X axis limits", y_lim="Y axis limits",
+    z_lim="Z axis limits", elevation="View elevation", azimuth="View azimuth",
+    roll="View roll", xlabelsize="X label font size", ylabelsize="Y label font size",
+    zlabelsize="Z label font size", legendsize="Legend font size",
+    switchcolor="Black/white text contrast threshold", prefix="Region label prefix",
+    numbers="Region numbering format",
+)
+
 STYLE_LINE_CHOICES = [
-    (("实线 ━━━", "Solid ━━━"), "solid"),
-    (("虚线 ┅┅┅", "Dashed ┅┅┅"), "dashed"),
-    (("点线 ·····", "Dotted ·····"), "dotted"),
-    (("点划线 ┅·┅", "Dash-dot ┅·┅"), "dashdot"),
+    (("实线", "Solid"), "solid"),
+    (("虚线", "Dashed"), "dashed"),
+    (("点线", "Dotted"), "dotted"),
+    (("点划线", "Dash-dot"), "dashdot"),
 ]
 STYLE_MARKER_CHOICES = [
     None,
@@ -1322,7 +1358,7 @@ Advanced code uses the_plt. Relative image paths use Documents. Python runs loca
 )
 # 包导入时的快速上手提示（终端、Jupyter）。
 IMPORT_TIPS = """
-彼图 BeTu 1.0.0 — Be better tool for U!
+彼图 BeTu 1.0.1 — Be better tool for U!
 科研仿真与 Excel 数据绘图，快速上手：
   makefig()                         打开中英文图形界面
   make_example('draw_lines')         公式到曲线（单参数仿真）
@@ -1647,14 +1683,18 @@ FORMULA_GUIDE = tuple(_re.sub(r" {8,}", "    ", text) for text in FORMULA_GUIDE)
 FORMULA_PLACEHOLDER = (
     """逐行输入：名称 = 表达式
 例如：$p_a$ = 2*a*x + b*x**2
+
 中间变量：p := a+b，位置不限。
-变量名只用字母、数字和下划线，不能以数字开头。
-“Ω...”插入符号与函数；Ctrl+滚轮缩放。""",
+变量名只能用字母、数字和下划线组合表示，不能以数字开头。
+
+“符号面板Ω...”插入符号与函数；Ctrl+滚轮缩放。""",
     """One expression per line: name = expression
 Example: $p_a$ = 2*a*x + b*x**2
+
 Intermediate: p := a+b (may appear anywhere).
 Use letters, digits and underscores; no leading digit.
-“Ω...” inserts symbols/functions. Ctrl+wheel zooms.""",
+
+“Symbol Panel Ω...” inserts symbols/functions. Ctrl+wheel zooms.""",
 )
 
 # core_functions.py 各函数的原始参数说明。

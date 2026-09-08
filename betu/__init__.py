@@ -58,7 +58,7 @@ import numpy as np
 from .helpers import SYMPY_NAMES
 
 __doc__ = PACKAGE_DOC
-__version__ = "1.0.0"
+__version__ = "1.0.1"
 
 
 def makefig():

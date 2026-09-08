@@ -1,6 +1,6 @@
 from .helpers import tr
 from . import helpers as H
-# Author: Yu-Xin Tian, 2026-09-07 Version 1.0.0
+# Author: Yu-Xin Tian, 2026-09-07 Version 1.0.1
 
 from sympy import *
 from itertools import permutations, product
@@ -715,12 +715,9 @@ def draw_area(expressions=None, assigns=None,
 
     if mode == 'max':
         the_texts = {}
-        if texts is None:
-            for em in expressions_keys:
-                the_texts[em.replace('$', '')] = em
-        else:
-            for i, em in enumerate(expressions_keys):
-                the_texts[em.replace('$', '')] = texts[i]
+        for i, em in enumerate(expressions_keys):
+            custom = texts[i] if texts is not None and i < len(texts) else None
+            the_texts[em.replace('$', '')] = custom if custom and custom.strip() else em
 
     # 定义区域的条件和对应的表达式顺序（含等于）
     all_relas = product(['>', '='], repeat=exp_num - 1)
@@ -816,8 +813,9 @@ def draw_area(expressions=None, assigns=None,
         y_center = np.mean(Y[condition])
 
         if mode != 'max':
-            the_text = H.REGION_NAME_FORMAT.format(prefix=prefix.rstrip(), number=numerals[i]).strip()
-            legend_text = H.REGION_LEGEND_FORMAT.format(name=the_text, relation=label)
+            region_name = H.REGION_NAME_FORMAT.format(prefix=prefix.rstrip(), number=numerals[i]).strip()
+            the_text = region_name
+            legend_text = H.REGION_LEGEND_FORMAT.format(name=region_name, relation=label)
         else:
             the_text = label
 

@@ -186,10 +186,15 @@ class PlotTab(W.QWidget):
             self.kind.currentIndexChanged.connect(self.change_chart)
             self.x = ComboBox()
             self.form_row(form, "x_column", self.x)
-            self.add_label(right_layout, "series")
+            series_header = W.QHBoxLayout()
+            right_layout.addLayout(series_header)
+            self.add_label(series_header, "series")
+            series_header.addStretch()
             self.series = W.QListWidget()
             self.series.setSelectionMode(W.QAbstractItemView.MultiSelection)
             self.series.setMaximumHeight(105)
+            self.series_all_button = self.add_button(series_header, "series_all", self.select_all_series)
+            self.series_none_button = self.add_button(series_header, "series_none", self.series.clearSelection)
             right_layout.addWidget(self.series)
             self.bins = W.QSpinBox()
             self.bins.setRange(1, 1000)
@@ -238,11 +243,6 @@ class PlotTab(W.QWidget):
         self.output = CodeEditor()
         self.output.setReadOnly(True)
         self.output.setFont(G.QFont("Consolas", 10))
-        self.edit_code = W.QCheckBox()
-        self.bind(self.edit_code, "edit_code")
-        self.edit_code.setToolTip(H.tr("edit_code_hint"))
-        self.edit_code.toggled.connect(self.toggle_code_editing)
-        output_header.addWidget(self.edit_code)
         self.add_wrap(output_header, self.output, "output")
         self.add_button(output_header, "copy_code", self.copy_code)
         left_layout.addWidget(self.output, 1)
@@ -265,30 +265,6 @@ class PlotTab(W.QWidget):
 
     def update_save_button(self):
         self.save_button.setText(H.tr("save_update" if self.code_path else "save_new"))
-
-    def toggle_code_editing(self, checked):
-        if self._restoring:
-            return
-        if checked:
-            if not self.output.toPlainText().strip():
-                try:
-                    self.compile_code(force=True)
-                except Exception:
-                    self.output.setPlainText("from betu import *\n")
-            self.output.setReadOnly(False)
-            self.main.statusBar().showMessage(H.tr("manual_code"))
-        else:
-            try:
-                self.restore_code(self.output.toPlainText(), self.code_path)
-                self.main.statusBar().showMessage(H.tr("code_locked"))
-            except Exception as exc:
-                self.edit_code.blockSignals(True)
-                self.edit_code.setChecked(True)
-                self.edit_code.blockSignals(False)
-                self.output.setReadOnly(False)
-                if getattr(exc, "lineno", None):
-                    self.output.mark_error(exc.lineno, str(exc))
-                self.report_error(exc)
 
     def bind(self, widget, key):
         self.text_bindings.append((widget, key))
@@ -317,7 +293,6 @@ class PlotTab(W.QWidget):
         for widget, key in self.text_bindings:
             widget.setText(H.tr(key))
         self.update_save_button()
-        self.edit_code.setToolTip(H.tr("edit_code_hint"))
         if not self.is_data:
             self.editor.setPlaceholderText(H.label(H.FORMULA_PLACEHOLDER))
         else:
@@ -358,7 +333,7 @@ class PlotTab(W.QWidget):
                 count=len(self.plan.intermediates),
             )
             self.main.statusBar().showMessage(status)
-            if not self._restoring and not self.edit_code.isChecked():
+            if not self._restoring:
                 try:
                     self.compile_code()
                 except ValueError:
@@ -489,9 +464,7 @@ class PlotTab(W.QWidget):
         # Bound integration variables belong in symbols but do not require numeric assignments.
         return parameters, None
 
-    def compile_code(self, force=False):
-        if not force and self.edit_code.isChecked():
-            return self.output.toPlainText()
+    def compile_code(self):
         parameters, data = self.collect()
         code = H.build_code(
             self.function,
@@ -662,7 +635,6 @@ class PlotTab(W.QWidget):
         try:
             self._restore_code(code)
             self.code_path = Path(source_path) if source_path else None
-            self.edit_code.setChecked(False)
             self.output.setReadOnly(True)
             self.output.document().setModified(False)
             self.update_save_button()
@@ -744,6 +716,12 @@ class PlotTab(W.QWidget):
             return
         name = "data_" + self.kind.currentData() if self.is_data else self.function
         self.restore_code(H.example_code(name))
+
+    def select_all_series(self):
+        x_column = self.x.currentData()
+        for index in range(self.series.count()):
+            item = self.series.item(index)
+            item.setSelected(item.text() != x_column and bool(item.flags() & C.Qt.ItemIsSelectable))
 
     def update_columns(self):
         selected = self.x.currentData()
@@ -907,6 +885,7 @@ class PlotTab(W.QWidget):
         layout.addWidget(verify)
 
         def convert():
+            output.clear()
             try:
                 output.setPlainText(
                     convert_formula(entry.toPlainText(), mode.currentData())
